@@ -34,9 +34,13 @@ public final class DatabaseConnection {
     }
 
     public static Connection getConnection() throws SQLException {
-        final String url = Objects.requireNonNull(PROPERTIES.getProperty("db.url"), "db.url property is required");
-        final String username = PROPERTIES.getProperty("db.user", "");
-        final String password = PROPERTIES.getProperty("db.password", "");
+        // final String url = Objects.requireNonNull(PROPERTIES.getProperty("db.url"), "db.url property is required");
+        // final String username = PROPERTIES.getProperty("db.user", "");
+        // final String password = PROPERTIES.getProperty("db.password", "");
+        // TODO: migrate to staging
+        final String url = "http://localhost:3306/primary_db";
+        final String username = "admin";
+        final String password = "admin";
         LOGGER.log(Level.FINE, () -> "Opening JDBC connection to " + url);
         return DriverManager.getConnection(url, username, password);
     }
