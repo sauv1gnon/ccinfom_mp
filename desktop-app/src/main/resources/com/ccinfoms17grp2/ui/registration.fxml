@@ -11,9 +11,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<!-- TODO: Resize later -->
 <BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.ccinfoms17grp2.ui.LoginController">
+            fx:controller="com.ccinfoms17grp2.ui.RegistrationController">
     <center>
         <StackPane>
             <VBox alignment="CENTER" spacing="24.0" styleClass="login-container">
@@ -23,19 +22,19 @@
                 
                 <!-- App Title -->
                 <VBox alignment="CENTER" spacing="8.0">
-                    <Label styleClass="app-title" text="Digital Queue System">
+                    <Label styleClass="app-title" text="Patient Registration">
                         <font>
                             <Font name="Segoe UI" size="24.0" />
                         </font>
                     </Label>
-                    <Label styleClass="login-subtitle" text="Please sign in to continue">
+                    <Label styleClass="login-subtitle" text="Create your patient account">
                         <font>
                             <Font name="Segoe UI" size="14.0" />
                         </font>
                     </Label>
                 </VBox>
 
-                <!-- Login Form -->
+                <!-- Registration Form -->
                 <VBox spacing="16.0" styleClass="login-form">
                     <TextField fx:id="emailField" promptText="Email Address" styleClass="text-field">
                         <font>
@@ -43,25 +42,53 @@
                         </font>
                     </TextField>
                     
-                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="text-field">
+                    <PasswordField fx:id="passwordField" promptText="Password (minimum 6 characters)" styleClass="text-field">
                         <font>
                             <Font name="Segoe UI" size="14.0" />
                         </font>
                     </PasswordField>
                     
-                    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" 
-                            styleClass="button" text="Sign In" maxWidth="Infinity">
+                    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="text-field">
                         <font>
                             <Font name="Segoe UI" size="14.0" />
                         </font>
-                    </Button>
+                    </PasswordField>
                     
-                    <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegistration" 
-                            styleClass="button.flat" text="Register" maxWidth="Infinity">
+                    <HBox spacing="16.0">
+                        <TextField fx:id="firstNameField" promptText="First Name" styleClass="text-field" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="Segoe UI" size="14.0" />
+                            </font>
+                        </TextField>
+                        
+                        <TextField fx:id="lastNameField" promptText="Last Name" styleClass="text-field" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="Segoe UI" size="14.0" />
+                            </font>
+                        </TextField>
+                    </HBox>
+                    
+                    <TextField fx:id="contactNumberField" promptText="Contact Number" styleClass="text-field">
                         <font>
                             <Font name="Segoe UI" size="14.0" />
                         </font>
-                    </Button>
+                    </TextField>
+                    
+                    <HBox spacing="10.0">
+                        <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegistration" 
+                                styleClass="button" text="Create Account" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="Segoe UI" size="14.0" />
+                            </font>
+                        </Button>
+                        
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" 
+                                styleClass="button flat" text="Back to Login" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="Segoe UI" size="14.0" />
+                            </font>
+                        </Button>
+                    </HBox>
                 </VBox>
 
                 <!-- Status Label -->

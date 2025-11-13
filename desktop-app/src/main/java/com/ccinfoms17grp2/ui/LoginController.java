@@ -9,8 +9,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,10 +29,12 @@ public class LoginController implements Initializable {
     private final AuthService authService;
     private final ExecutorService executorService;
     private final StringProperty statusMessage = new SimpleStringProperty();
+    private final ServiceRegistry services;
 
     public LoginController(ServiceRegistry services) {
         this.authService = services.getAuthService();
         this.executorService = Executors.newCachedThreadPool();
+        this.services = services;
     }
 
     @Override
@@ -67,8 +71,6 @@ public class LoginController implements Initializable {
             }
         };
 
-        // Update navigation reroute
-        // TODO: Introduce a routing class
         loginTask.setOnSucceeded(event -> {
             User user = loginTask.getValue();
             showStatus("Login successful! Welcome " + user.getEmail(), false);
@@ -76,8 +78,7 @@ public class LoginController implements Initializable {
             Platform.runLater(() -> {
                 emailField.clear();
                 passwordField.clear();
-                UiUtils.showInformation("Login Successful", 
-                    "Welcome " + user.getEmail() + "!\nAccount Type: " + user.getUserType());
+                navigateToHomepage(user);
             });
             
             setLoadingState(false);
@@ -98,6 +99,56 @@ public class LoginController implements Initializable {
         });
 
         executorService.execute(loginTask);
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    private void handleRegistration() {
+        navigateToRegistration();
+    }
+
+    @SuppressWarnings("UseSpecificCatch")
+    private void navigateToRegistration() {
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/registration.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == RegistrationController.class) {
+                    return new RegistrationController(new com.ccinfoms17grp2.services.ServiceRegistry());
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to registration screen", ex);
+        }
+    }
+
+    @SuppressWarnings("UseSpecificCatch")
+    private void navigateToHomepage(User user) {
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/homepage.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == HomepageController.class) {
+                    return new HomepageController(services, user);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to homepage", ex);
+        }
     }
 
     private void showStatus(String message, boolean isError) {

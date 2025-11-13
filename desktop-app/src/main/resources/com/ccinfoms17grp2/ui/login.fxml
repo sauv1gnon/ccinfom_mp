@@ -55,6 +55,13 @@
                             <Font name="Segoe UI" size="14.0" />
                         </font>
                     </Button>
+                    
+                    <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegistration" 
+                            styleClass="button.flat" text="Register" maxWidth="Infinity">
+                        <font>
+                            <Font name="Segoe UI" size="14.0" />
+                        </font>
+                    </Button>
                 </VBox>
 
                 <!-- Status Label -->
