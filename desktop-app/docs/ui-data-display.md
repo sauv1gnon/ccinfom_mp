@@ -2,6 +2,8 @@
 
 This guide explains how the JavaFX desktop client pulls records from the SQL database and renders them on-screen using the DAO and service layers that already exist in the project.
 
+Refer to [https://docs.google.com/document/d/1QbLOzret8yHOofVa-ulw5YguD2WsL-ESkT9qpEeBwzk/edit?tab=t.0]
+
 ## Layered Architecture Recap
 
 ```

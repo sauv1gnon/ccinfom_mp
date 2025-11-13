@@ -3,16 +3,23 @@ CREATE TABLE IF NOT EXISTS patient_records (
     last_name VARCHAR(100) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     contact_number VARCHAR(15),
-    email VARCHAR(100)
+    email VARCHAR(255), -- Updated to match user email length
+    password_hash VARCHAR(64), -- SHA256 hash for authentication
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS doctor_records (
     doctor_id INT AUTO_INCREMENT PRIMARY KEY,
     last_name VARCHAR(100) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255), -- For doctor authentication
+    password_hash VARCHAR(64), -- SHA256 hash for authentication
     specializations_list JSON,
     availability_status ENUM('available', 'unavailable') DEFAULT 'available',
-    availability_datetime_ranges JSON
+    availability_datetime_ranges JSON,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS specialization_records (

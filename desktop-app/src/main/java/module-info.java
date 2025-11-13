@@ -10,4 +10,5 @@ module com.ccinfoms.desktopapp {
 	exports com.ccinfoms17grp2.utils;
 
 	opens com.ccinfoms17grp2 to javafx.graphics;
+	opens com.ccinfoms17grp2.ui to javafx.fxml;
 }

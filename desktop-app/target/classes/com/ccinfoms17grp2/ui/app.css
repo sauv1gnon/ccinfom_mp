@@ -170,3 +170,61 @@
     -fx-min-width: 80px;
     min-width: 80px;
 }
+
+
+.login-container {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-border-color: #d9e2ec;
+    border-color: #d9e2ec;
+    -fx-border-radius: 12px;
+    border-radius: 12px;
+    -fx-padding: 40px;
+    padding: 40px;
+    -fx-min-width: 400px;
+    min-width: 400px;
+    -fx-max-width: 500px;
+    max-width: 500px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+    -fx-background-insets: 0;
+}
+
+.login-subtitle {
+    -fx-text-fill: #486581;
+    color: #486581;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.login-form {
+    -fx-min-width: 300px;
+    min-width: 300px;
+}
+
+.status-message {
+    -fx-font-size: 12px;
+    font-size: 12px;
+    -fx-padding: 8px 0 0 0;
+    padding: 8px 0 0 0;
+}
+
+.status-error {
+    -fx-text-fill: #d63031;
+    color: #d63031;
+    -fx-font-weight: 500;
+    font-weight: 500;
+}
+
+.status-success {
+    -fx-text-fill: #00b894;
+    color: #00b894;
+    -fx-font-weight: 500;
+    font-weight: 500;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #0f6ba8;
+    border-color: #0f6ba8;
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+}
