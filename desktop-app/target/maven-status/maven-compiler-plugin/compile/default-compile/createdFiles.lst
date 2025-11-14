@@ -1,3 +1,4 @@
+com\ccinfoms17grp2\ui\DashboardController.class
 com\ccinfoms17grp2\ui\RegistrationController$1.class
 com\ccinfoms17grp2\models\User.class
 com\ccinfoms17grp2\services\ServiceRegistry.class
@@ -22,8 +23,10 @@ com\ccinfoms17grp2\models\Queue.class
 com\ccinfoms17grp2\dao\impl\SpecializationJdbcDao.class
 com\ccinfoms17grp2\dao\UserDAO.class
 com\ccinfoms17grp2\models\Doctor.class
+com\ccinfoms17grp2\ui\HomepageController$1.class
 com\ccinfoms17grp2\dao\PatientDAO.class
 module-info.class
+com\ccinfoms17grp2\ui\HomepageController.class
 com\ccinfoms17grp2\dao\impl\PatientJdbcDao.class
 com\ccinfoms17grp2\services\ValidationException.class
 com\ccinfoms17grp2\models\Appointment.class

@@ -132,22 +132,44 @@ public class LoginController implements Initializable {
     @SuppressWarnings("UseSpecificCatch")
     private void navigateToHomepage(User user) {
         Stage stage = (Stage) emailField.getScene().getWindow();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/homepage.fxml"));
-            loader.setControllerFactory(controllerClass -> {
-                if (controllerClass == HomepageController.class) {
-                    return new HomepageController(services, user);
-                }
-                try {
-                    return controllerClass.getDeclaredConstructor().newInstance();
-                } catch (Exception ex) {
-                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
-                }
-            });
-            
-            stage.getScene().setRoot(loader.load());
-        } catch (Exception ex) {
-            UiUtils.showError("Navigation Error", "Failed to navigate to homepage", ex);
+        
+        // Route admin users to dashboard, others to homepage
+        if (user.getUserType() == User.UserType.ADMIN) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/dashboard.fxml"));
+                loader.setControllerFactory(controllerClass -> {
+                    if (controllerClass == DashboardController.class) {
+                        return new DashboardController(services, user);
+                    }
+                    try {
+                        return controllerClass.getDeclaredConstructor().newInstance();
+                    } catch (Exception ex) {
+                        throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                    }
+                });
+                
+                stage.getScene().setRoot(loader.load());
+            } catch (Exception ex) {
+                UiUtils.showError("Navigation Error", "Failed to navigate to dashboard", ex);
+            }
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/homepage.fxml"));
+                loader.setControllerFactory(controllerClass -> {
+                    if (controllerClass == HomepageController.class) {
+                        return new HomepageController(services, user);
+                    }
+                    try {
+                        return controllerClass.getDeclaredConstructor().newInstance();
+                    } catch (Exception ex) {
+                        throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                    }
+                });
+                
+                stage.getScene().setRoot(loader.load());
+            } catch (Exception ex) {
+                UiUtils.showError("Navigation Error", "Failed to navigate to homepage", ex);
+            }
         }
     }
 

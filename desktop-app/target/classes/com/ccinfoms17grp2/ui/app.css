@@ -228,3 +228,31 @@
     -fx-background-color: #ffffff;
     background-color: #ffffff;
 }
+
+/* Dashboard styles */
+.dashboard-left-panel {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-border-color: #d9e2ec;
+    border-color: #d9e2ec;
+    -fx-border-width: 0 1px 0 0;
+    border-width: 0 1px 0 0;
+    -fx-min-width: 200px;
+    min-width: 200px;
+}
+
+.dashboard-right-panel {
+    -fx-background-color: #f3f6fb;
+    background-color: #f3f6fb;
+    -fx-padding: 40px;
+    padding: 40px;
+}
+
+.dashboard-left-panel .label.toolbar-title {
+    -fx-text-fill: #0b4e79;
+    color: #0b4e79;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: 600;
+    font-weight: 600;
+}
