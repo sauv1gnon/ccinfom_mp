@@ -5,59 +5,59 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ccinfoms17grp2.ui.HomepageController">
-    <top>
-        <HBox styleClass="hbox.header">
-            <Label styleClass="label app-title" text="Digital Queue and Appointment System">
-                <font>
-                    <Font name="Segoe UI" size="18.0" />
-                </font>
-            </Label>
-        </HBox>
-    </top>
-    <center>
-        <VBox alignment="CENTER" spacing="24.0">
+    <left>
+        <VBox styleClass="dashboard-left-panel" prefWidth="25%">
             <padding>
-                <Insets top="60.0" right="40.0" bottom="40.0" left="40.0"/>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
             </padding>
+            <spacing>20.0"/>
             
-            <!-- Main Greeting -->
-            <VBox alignment="CENTER" spacing="16.0">
-                <Label fx:id="greetingLabel" styleClass="label app-title" text="Greetings, User">
-                    <font>
-                        <Font name="Segoe UI" size="28.0" />
-                    </font>
-                </Label>
-                
-                <Label fx:id="userTypeLabel" styleClass="login-subtitle" text="Account Type:">
-                    <font>
-                        <Font name="Segoe UI" size="16.0" />
-                    </font>
-                </Label>
+            <!-- User Info -->
+            <VBox spacing="8.0">
+                <Label fx:id="greetingLabel" styleClass="label.app-title" text="Greetings, User" />
+                <Label fx:id="userTypeLabel" styleClass="login-subtitle" text="Account Type:" />
             </VBox>
             
-            <!-- Welcome Content Area -->
-            <VBox alignment="CENTER" spacing="20.0" styleClass="login-container" maxWidth="600.0">
+            <!-- Navigation Buttons -->
+            <VBox spacing="12.0">
+                <Button fx:id="signOutButton" styleClass="button" text="Sign Out" maxWidth="Infinity" onAction="#handleSignOut" />
+                <Button fx:id="viewQueueButton" styleClass="button" text="View Queue" maxWidth="Infinity" onAction="#handleViewQueue" />
+                <Button fx:id="viewAppointmentsButton" styleClass="button" text="View Appointments" maxWidth="Infinity" onAction="#handleViewAppointments" />
+                <Button fx:id="viewConsultationsButton" styleClass="button" text="View Consultations" maxWidth="Infinity" onAction="#handleViewConsultations" />
+            </VBox>
+        </VBox>
+    </left>
+    <center>
+        <StackPane>
+            <VBox alignment="CENTER" spacing="24.0" styleClass="dashboard-right-panel">
                 <padding>
                     <Insets top="40.0" right="40.0" bottom="40.0" left="40.0"/>
                 </padding>
                 
-                <Label styleClass="login-subtitle" text="Welcome to the Digital Queue and Appointment System">
-                    <font>
-                        <Font name="Segoe UI" size="16.0" />
-                    </font>
-                </Label>
-                
-                <Label styleClass="login-subtitle" text="Your personalized dashboard will be available soon.">
-                    <font>
-                        <Font name="Segoe UI" size="14.0" />
-                    </font>
-                </Label>
+                <!-- Welcome Content Area -->
+                <VBox alignment="CENTER" spacing="20.0" styleClass="login-container" maxWidth="600.0">
+                    <padding>
+                        <Insets top="40.0" right="40.0" bottom="40.0" left="40.0"/>
+                    </padding>
+                    
+                    <Label styleClass="label app-title" text="Welcome to the Digital Queue and Appointment System">
+                        <font>
+                            <Font name="Segoe UI" size="24.0" />
+                        </font>
+                    </Label>
+                    
+                    <Label styleClass="login-subtitle" text="Use the navigation panel to manage your appointments and consultations">
+                        <font>
+                            <Font name="Segoe UI" size="14.0" />
+                        </font>
+                    </Label>
+                </VBox>
             </VBox>
-        </VBox>
+        </StackPane>
     </center>
 </BorderPane>

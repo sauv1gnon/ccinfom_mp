@@ -10,7 +10,10 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 import java.net.URL;
 import java.util.Optional;
@@ -22,16 +25,22 @@ public class HomepageController implements Initializable {
 
     @FXML private Label greetingLabel;
     @FXML private Label userTypeLabel;
+    @FXML private Button signOutButton;
+    @FXML private Button viewQueueButton;
+    @FXML private Button viewAppointmentsButton;
+    @FXML private Button viewConsultationsButton;
 
     private final User currentUser;
     private final PatientService patientService;
     private final DoctorService doctorService;
     private final ExecutorService executorService;
+    private final ServiceRegistry services;
 
     public HomepageController(ServiceRegistry services, User authenticatedUser) {
         this.currentUser = authenticatedUser;
         this.patientService = services.getPatientService();
         this.doctorService = services.getDoctorService();
+        this.services = services;
         this.executorService = Executors.newCachedThreadPool();
     }
 
@@ -85,6 +94,110 @@ public class HomepageController implements Initializable {
         };
 
         executorService.execute(loadTask);
+    }
+
+    @FXML
+    private void handleSignOut() {
+        navigateToLogin();
+    }
+
+    @FXML
+    private void handleViewAppointments() {
+        navigateToAppointmentList();
+    }
+
+    @FXML
+    private void handleViewConsultations() {
+        navigateToConsultationList();
+    }
+
+    @FXML
+    private void handleViewQueue() {
+        navigateToQueueList();
+    }
+
+    private void navigateToLogin() {
+        Stage stage = (Stage) signOutButton.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/login.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == LoginController.class) {
+                    return new LoginController(services);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to login screen", ex);
+        }
+    }
+
+    private void navigateToAppointmentList() {
+        Stage stage = (Stage) viewAppointmentsButton.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/appointment-list.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == AppointmentListController.class) {
+                    return new AppointmentListController(services, currentUser);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to appointment list screen", ex);
+        }
+    }
+
+    private void navigateToConsultationList() {
+        Stage stage = (Stage) viewConsultationsButton.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/consultation-list.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == ConsultationListController.class) {
+                    return new ConsultationListController(services, currentUser);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to consultation list screen", ex);
+        }
+    }
+
+    private void navigateToQueueList() {
+        Stage stage = (Stage) viewQueueButton.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/appointment-list.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == AppointmentListController.class) {
+                    return new AppointmentListController(services, currentUser);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to queue list screen", ex);
+        }
     }
 
     public void cleanup() {

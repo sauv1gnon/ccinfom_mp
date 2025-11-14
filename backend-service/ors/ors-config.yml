@@ -1,0 +1,109 @@
+ors:
+  info:
+    base_url: "http://localhost:8080/ors"
+    support_mail: "support@example.com"
+    author_tag: "delivery-stack"
+    content_licence: "OpenStreetMap contributors"
+  server:
+    port: 8080
+    bind_host: 0.0.0.0
+    compression:
+      enabled: true
+      mime_types:
+      - application/json
+      - application/geo+json
+      - application/xml
+      - text/xml
+      - text/html
+      - text/plain
+      - application/wkt
+      - application/gpx+xml
+    response_compression_threshold: 2048
+    gzipped_response_threshold: 2048
+    cors:
+      allowed_origins: "*"
+      allowed_headers:
+      - Content-Type
+      - X-Requested-With
+      allowed_methods:
+      - GET
+      - POST
+      - OPTIONS
+    services:
+      routing:
+        enabled: true
+      matrix:
+        enabled: true
+        maximum_routes: 750
+        maximum_visited_nodes: 500000
+      isochrones:
+        enabled: true
+      snap:
+        enabled: true
+  engine:
+    default_profile: driving-car
+    build:
+      source_file: /home/ors/files/philippines.osm.pbf
+      elevation: false
+      instructions: true
+      hill_index: false
+      threads: 8
+      preparation_threads: 8
+    profiles:
+      driving-car:
+        profile_file: car.lua
+        enabled: true
+        attach_node_id: true
+        custom_model:
+          distance_influence: 40
+          priority:
+            - if: "transport_mode == FERRY"
+              multiply_by: 0.01
+            - if: "road_class == MOTORWAY"
+              multiply_by: 1.05
+            - if: "road_class == PRIMARY"
+              multiply_by: 1.05
+            - if: "road_class == SECONDARY"
+              multiply_by: 1.03
+            - if: "road_class == TERTIARY"
+              multiply_by: 1.02
+            - if: "road_class == RESIDENTIAL"
+              multiply_by: 0.85
+            - if: "road_class == SERVICE"
+              multiply_by: 0.7
+            - if: "road_class == TRACK || road_class == PATH"
+              multiply_by: 0.4
+            - if: "surface == COBBLESTONE || surface == GRAVEL || surface == DIRT"
+              multiply_by: 0.5
+          speed:
+            - if: "road_class == MOTORWAY"
+              limit_to: 90
+            - if: "road_class == PRIMARY || road_class == SECONDARY"
+              multiply_by: 0.95
+            - if: "road_class == RESIDENTIAL"
+              multiply_by: 0.85
+            - if: "road_class == SERVICE"
+              multiply_by: 0.7
+            - if: "road_class == TRACK || road_class == PATH"
+              multiply_by: 0.4
+            - if: "surface == COBBLESTONE || surface == GRAVEL || surface == DIRT"
+              multiply_by: 0.5
+    ext_storages:
+      allowed_accessible_storage_properties:
+      - name
+      - country
+      - country_code
+      - locality
+      - district
+      - street
+      - house_number
+      - postal_code
+  logging:
+    enabled: true
+    level_file: INFO
+    level_console: INFO
+    level_logfile: INFO
+    file:
+      enabled: false
+      path: /home/ors/logs/
+  system_message: "Production ORS Instance"

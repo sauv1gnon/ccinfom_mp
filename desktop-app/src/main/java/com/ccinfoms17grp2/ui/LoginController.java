@@ -44,6 +44,7 @@ public class LoginController implements Initializable {
         loginButton.disableProperty().bind(
             emailField.textProperty().isEmpty()
                 .or(passwordField.textProperty().isEmpty())
+                .or(statusMessage.isEqualTo("Signing in..."))
         );
 
         passwordField.setOnAction(event -> handleLogin());
@@ -133,7 +134,6 @@ public class LoginController implements Initializable {
     private void navigateToHomepage(User user) {
         Stage stage = (Stage) emailField.getScene().getWindow();
         
-        // Route admin users to dashboard, others to homepage
         if (user.getUserType() == User.UserType.ADMIN) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/dashboard.fxml"));
@@ -191,7 +191,6 @@ public class LoginController implements Initializable {
     }
 
     private void setLoadingState(boolean isLoading) {
-        loginButton.setDisable(isLoading);
         emailField.setDisable(isLoading);
         passwordField.setDisable(isLoading);
         

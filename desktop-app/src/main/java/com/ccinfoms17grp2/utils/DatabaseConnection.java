@@ -39,8 +39,8 @@ public final class DatabaseConnection {
         // final String password = PROPERTIES.getProperty("db.password", "");
         // TODO: migrate to staging
         final String url = "http://localhost:3306/primary_db";
-        final String username = "admin";
-        final String password = "admin";
+        final String username = "root";
+        final String password = "dudewtf12345";
         LOGGER.log(Level.FINE, () -> "Opening JDBC connection to " + url);
         return DriverManager.getConnection(url, username, password);
     }

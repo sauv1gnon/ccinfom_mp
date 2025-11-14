@@ -1,0 +1,73 @@
+{
+  "options": {
+    "apiKey": "6f3366f33a6862d33c16de1178a009be784d9c3bda7331a5c48dbb3993ae366d",
+    "domains": [
+      "localhost:8092",
+      "127.0.0.1:8092"
+    ],
+    "formatOptions": {
+      "jpeg": {
+        "quality": 80
+      },
+      "webp": {
+        "quality": 90
+      }
+    },
+    "maxScaleFactor": 3,
+    "maxSize": 2048,
+    "pbfAlias": "pbf",
+    "serveAllFonts": false,
+    "serveAllStyles": false,
+    "serveStaticMaps": true,
+    "allowRemoteMarkerIcons": true,
+    "allowInlineMarkerImages": true,
+    "staticAttributionText": "(c) OpenMapTiles, (c) OpenStreetMap contributors",
+    "tileMargin": 0
+  },
+  "data": {
+    "openmaptiles": {
+      "mbtiles": "/data/philippines.mbtiles",
+      "maxzoom": 14,
+      "bounds": [
+        116.924,
+        4.586,
+        126.604,
+        21.121
+      ]
+    }
+  },
+  "styles": {
+    "basic": {
+      "style": "basic.json",
+      "tilejson": {
+        "bounds": [
+          116.924,
+          4.586,
+          126.604,
+          21.121
+        ],
+        "center": [
+          121,
+          12,
+          5
+        ]
+      }
+    },
+    "hybrid": {
+      "style": "satellite-hybrid.json",
+      "serve_rendered": false,
+      "tilejson": {
+        "format": "webp",
+        "bounds": [
+          116.924,
+          4.586,
+          126.604,
+          21.121
+        ]
+      }
+    },
+    "remote": {
+      "style": "https://demotiles.maplibre.org/style.json"
+    }
+  }
+}

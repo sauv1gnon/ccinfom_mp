@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ccinfoms17grp2.ui.BookAppointmentController">
+    <left>
+        <VBox styleClass="dashboard-left-panel" prefWidth="250.0">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+            <spacing>20.0</spacing>
+            
+            <VBox spacing="12.0">
+                <Button styleClass="button" text="Back to Appointments" maxWidth="Infinity" onAction="#handleCancelBooking" />
+                <Button styleClass="button flat" text="Homepage" maxWidth="Infinity" onAction="#handleBackToHomepage" />
+            </VBox>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="20.0" styleClass="dashboard-right-panel">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+            
+            <VBox spacing="10.0">
+                <Label styleClass="label app-title" text="Book an Appointment">
+                    <font>
+                        <Font name="Segoe UI" size="24.0" />
+                    </font>
+                </Label>
+            </VBox>
+            
+            <VBox spacing="15.0" styleClass="login-container" maxWidth="500.0">
+                <padding>
+                    <Insets top="30.0" right="30.0" bottom="30.0" left="30.0"/>
+                </padding>
+                
+                <VBox spacing="20.0">
+                    <Label styleClass="login-subtitle" text="Appointment booking form will be available soon." />
+                    
+                    <HBox spacing="15.0">
+                        <Button styleClass="button" text="Cancel Booking" onAction="#handleCancelBooking" />
+                        <Button styleClass="button" text="Book Appointment" onAction="#handleBookAppointment" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
