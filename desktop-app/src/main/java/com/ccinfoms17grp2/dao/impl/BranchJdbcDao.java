@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
-    private static final String BASE_SELECT = "SELECT branch_id, branch_name, address, capacity, created_at FROM Branch ";
+    private static final String BASE_SELECT = "SELECT branch_id, branch_name, address, latitude, longitude, capacity, contact_number, created_at FROM branch_records ";
     private static final String ORDER_BY = " ORDER BY branch_name";
 
     @Override
@@ -55,12 +55,23 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
     @Override
     public Branch create(Branch branch) throws DaoException {
-        final String sql = "INSERT INTO Branch (branch_name, address, capacity) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO branch_records (branch_name, address, latitude, longitude, capacity, contact_number) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, branch.getBranchName());
             ps.setString(2, branch.getAddress());
-            ps.setInt(3, branch.getCapacity());
+            if (branch.getLatitude() != null) {
+                ps.setDouble(3, branch.getLatitude());
+            } else {
+                ps.setNull(3, java.sql.Types.DECIMAL);
+            }
+            if (branch.getLongitude() != null) {
+                ps.setDouble(4, branch.getLongitude());
+            } else {
+                ps.setNull(4, java.sql.Types.DECIMAL);
+            }
+            ps.setInt(5, branch.getCapacity());
+            ps.setString(6, branch.getContactNumber());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -75,13 +86,24 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
     @Override
     public boolean update(Branch branch) throws DaoException {
-        final String sql = "UPDATE Branch SET branch_name = ?, address = ?, capacity = ? WHERE branch_id = ?";
+        final String sql = "UPDATE branch_records SET branch_name = ?, address = ?, latitude = ?, longitude = ?, capacity = ?, contact_number = ? WHERE branch_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, branch.getBranchName());
             ps.setString(2, branch.getAddress());
-            ps.setInt(3, branch.getCapacity());
-            ps.setInt(4, branch.getBranchId());
+            if (branch.getLatitude() != null) {
+                ps.setDouble(3, branch.getLatitude());
+            } else {
+                ps.setNull(3, java.sql.Types.DECIMAL);
+            }
+            if (branch.getLongitude() != null) {
+                ps.setDouble(4, branch.getLongitude());
+            } else {
+                ps.setNull(4, java.sql.Types.DECIMAL);
+            }
+            ps.setInt(5, branch.getCapacity());
+            ps.setString(6, branch.getContactNumber());
+            ps.setInt(7, branch.getBranchId());
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) {
             throw translateException("Failed to update branch with id=" + branch.getBranchId(), ex);
@@ -90,7 +112,7 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        final String sql = "DELETE FROM Branch WHERE branch_id = ?";
+        final String sql = "DELETE FROM branch_records WHERE branch_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -102,7 +124,7 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
     @Override
     public boolean existsByName(String name) throws DaoException {
-        final String sql = "SELECT 1 FROM Branch WHERE branch_name = ?";
+        final String sql = "SELECT 1 FROM branch_records WHERE branch_name = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, name);
@@ -118,8 +140,11 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
         int id = rs.getInt("branch_id");
         String name = rs.getString("branch_name");
         String address = rs.getString("address");
+        Double latitude = rs.getObject("latitude") != null ? rs.getDouble("latitude") : null;
+        Double longitude = rs.getObject("longitude") != null ? rs.getDouble("longitude") : null;
         int capacity = rs.getInt("capacity");
+        String contactNumber = rs.getString("contact_number");
         LocalDateTime createdAt = DateTimeUtil.fromTimestamp(rs.getTimestamp("created_at"));
-        return new Branch(id, name, address, capacity, createdAt);
+        return new Branch(id, name, address, latitude, longitude, capacity, contactNumber, createdAt);
     }
 }

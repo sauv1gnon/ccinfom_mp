@@ -16,16 +16,43 @@ INSERT INTO patient_records (patient_id,last_name,first_name,contact_number,emai
 (1003,'Focalor','Furina','+1-555-0003','furina.focalor@patient.test',SHA2('n3uv1llette',256),NOW(),NOW());
 
 INSERT INTO doctor_records (doctor_id,last_name,first_name,email,password_hash,specializations_list,availability_status,availability_datetime_ranges,created_at,updated_at) VALUES
-(2001,'House','Gregory','greg.house@doctor.test',SHA2('HousePass123',256),JSON_ARRAY('Cardiology'),'available',JSON_ARRAY(JSON_OBJECT('from','2025-11-17 09:00:00','to','2025-11-17 17:00:00')),NOW(),NOW()),
-(2002,'Wilson','James','james.wilson@doctor.test',SHA2('WilsonPass123',256),JSON_ARRAY('Pediatrics','General Practice'),'available',JSON_ARRAY(JSON_OBJECT('from','2025-11-18 10:00:00','to','2025-11-18 16:00:00')),NOW(),NOW());
+(2001,'House','Gregory','greg.house@doctor.test',SHA2('HousePass123',256),JSON_ARRAY(1),'available',JSON_ARRAY(
+    JSON_OBJECT('day_of_week','Monday','start_time','08:00','end_time','17:00'),
+    JSON_OBJECT('day_of_week','Tuesday','start_time','08:00','end_time','17:00'),
+    JSON_OBJECT('day_of_week','Wednesday','start_time','08:00','end_time','17:00'),
+    JSON_OBJECT('day_of_week','Thursday','start_time','08:00','end_time','17:00'),
+    JSON_OBJECT('day_of_week','Friday','start_time','08:00','end_time','17:00')
+),NOW(),NOW()),
+(2002,'Wilson','James','james.wilson@doctor.test',SHA2('WilsonPass123',256),JSON_ARRAY(2,3),'available',JSON_ARRAY(
+    JSON_OBJECT('day_of_week','Monday','start_time','09:00','end_time','18:00'),
+    JSON_OBJECT('day_of_week','Wednesday','start_time','09:00','end_time','18:00'),
+    JSON_OBJECT('day_of_week','Friday','start_time','09:00','end_time','18:00')
+),NOW(),NOW());
 
 INSERT INTO patient_records (patient_id,last_name,first_name,contact_number,email,password_hash,created_at,updated_at) VALUES
 (2001,'House','Gregory','+1-555-0004','greg.house@doctor.test',SHA2('HousePass123',256),NOW(),NOW()),
 (2002,'Wilson','James','+1-555-0005','james.wilson@doctor.test',SHA2('WilsonPass123',256),NOW(),NOW());
 
 INSERT INTO doctor_records (doctor_id,last_name,first_name,email,password_hash,specializations_list,availability_status,availability_datetime_ranges,created_at,updated_at) VALUES
-(1001,'Admin','System','admin@example.test',SHA2('AdminPass123',256),JSON_ARRAY('General Practice'),'available',JSON_ARRAY(JSON_OBJECT('from','2025-11-17 09:00:00','to','2025-11-17 17:00:00')),NOW(),NOW()),
-(1002,'The','Damselette','columbina@patient.test',SHA2('s4ndr0neWasHere',256),JSON_ARRAY('General Practice'),'available',JSON_ARRAY(JSON_OBJECT('from','2025-11-17 09:00:00','to','2025-11-17 17:00:00')),NOW(),NOW());
+(1001,'Admin','System','admin@example.test',SHA2('AdminPass123',256),JSON_ARRAY(3),'available',JSON_ARRAY(
+    JSON_OBJECT('day_of_week','Monday','start_time','08:00','end_time','20:00'),
+    JSON_OBJECT('day_of_week','Tuesday','start_time','08:00','end_time','20:00'),
+    JSON_OBJECT('day_of_week','Wednesday','start_time','08:00','end_time','20:00'),
+    JSON_OBJECT('day_of_week','Thursday','start_time','08:00','end_time','20:00'),
+    JSON_OBJECT('day_of_week','Friday','start_time','08:00','end_time','20:00')
+),NOW(),NOW()),
+(1002,'The','Damselette','columbina@patient.test',SHA2('s4ndr0neWasHere',256),JSON_ARRAY(3,4),'available',JSON_ARRAY(
+    JSON_OBJECT('day_of_week','Tuesday','start_time','10:00','end_time','19:00'),
+    JSON_OBJECT('day_of_week','Thursday','start_time','10:00','end_time','19:00'),
+    JSON_OBJECT('day_of_week','Saturday','start_time','08:00','end_time','14:00')
+),NOW(),NOW());
+
+INSERT INTO doctor_branch_assignment (doctor_id, branch_id) VALUES
+(1001, 1),
+(1001, 2),
+(1002, 1),
+(2001, 1),
+(2002, 2);
 
 INSERT IGNORE INTO user_roles (role_name, description) VALUES
 ('PATIENT','Patient role for booking appointments and managing records'),

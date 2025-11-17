@@ -23,7 +23,13 @@
                     </font>
                 </Label>
                 
-                <Button styleClass="button flat" text="Sign Out" onAction="#handleSignOut" 
+                <Button styleClass="button flat" text="Sign Out" onAction="#handleSignOut"
+                        maxWidth="Infinity" />
+                <Button styleClass="button flat" text="View Queue" onAction="#handleViewQueue"
+                        maxWidth="Infinity" />
+                <Button styleClass="button flat" text="View Appointments" onAction="#handleViewAppointments"
+                        maxWidth="Infinity" />
+                <Button styleClass="button flat" text="View Consultations" onAction="#handleViewConsultations"
                         maxWidth="Infinity" />
             </VBox>
         </VBox>

@@ -73,7 +73,6 @@ public class UserJdbcDao extends AbstractJdbcDao implements UserDAO {
                     user.setUserId(generatedId);
                 }
             }
-            // fetch created_at from database
             return findById(user.getUserId()).orElse(user);
         } catch (SQLException ex) {
             throw translateException("Failed to create user", ex);

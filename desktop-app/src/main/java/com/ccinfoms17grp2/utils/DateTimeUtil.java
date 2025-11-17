@@ -25,6 +25,10 @@ public final class DateTimeUtil {
         return dateTime == null ? "" : DEFAULT_FORMATTER.format(dateTime);
     }
 
+    public static String formatDateTime(LocalDateTime dateTime) {
+        return format(dateTime);
+    }
+
     public static LocalDateTime parse(String value) {
         Objects.requireNonNull(value, "value");
         return LocalDateTime.parse(value, DEFAULT_FORMATTER);

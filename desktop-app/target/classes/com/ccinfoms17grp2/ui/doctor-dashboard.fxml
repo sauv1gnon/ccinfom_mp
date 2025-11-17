@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@app.css"
+            prefHeight="700.0" prefWidth="1000.0">
+    
+    <!-- Header -->
+    <top>
+        <VBox styleClass="header" spacing="10">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="welcomeLabel" text="Welcome, Doctor" styleClass="title">
+                    <font><Font size="24" /></font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="signOutButton" text="Sign Out" onAction="#handleSignOut" styleClass="btn-secondary"/>
+            </HBox>
+            
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <Label fx:id="appointmentCountLabel" text="Today's Appointments: 0" styleClass="subtitle"/>
+                <Label fx:id="queueCountLabel" text="Queue Waiting: 0" styleClass="subtitle"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <VBox spacing="20">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            
+            <!-- Quick Actions -->
+            <VBox spacing="10">
+                <Label text="Quick Actions" styleClass="section-title">
+                    <font><Font size="18" /></font>
+                </Label>
+                
+                <HBox spacing="15">
+                    <Button fx:id="manageQueueButton" text="Manage Queue" onAction="#handleManageQueue" 
+                            styleClass="btn-primary" prefWidth="150" prefHeight="40"/>
+                    <Button fx:id="manageConsultationsButton" text="Manage Consultations" onAction="#handleManageConsultations" 
+                            styleClass="btn-primary" prefWidth="150" prefHeight="40"/>
+                    <Button fx:id="manageProfileButton" text="My Profile" onAction="#handleManageProfile" 
+                            styleClass="btn-primary" prefWidth="150" prefHeight="40"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" 
+                            styleClass="btn-secondary" prefWidth="100" prefHeight="40"/>
+                </HBox>
+            </VBox>
+            
+            <Separator/>
+            
+            <!-- Today's Appointments -->
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <Label text="Today's Appointments" styleClass="section-title">
+                    <font><Font size="18" /></font>
+                </Label>
+                
+                <TableView fx:id="appointmentsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="appointmentIdColumn" text="ID" prefWidth="60"/>
+                        <TableColumn fx:id="patientNameColumn" text="Patient Name" prefWidth="200"/>
+                        <TableColumn fx:id="appointmentTimeColumn" text="Appointment Time" prefWidth="180"/>
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="150"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

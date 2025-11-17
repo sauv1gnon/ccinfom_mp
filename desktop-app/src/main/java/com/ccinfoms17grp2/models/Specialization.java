@@ -7,14 +7,20 @@ public class Specialization {
     private int specializationId;
     private String specializationName;
     private String specializationCode;
+    private String description;
 
     public Specialization() {
     }
 
-    public Specialization(int specializationId, String specializationName, String specializationCode) {
+    public Specialization(int specializationId, String specializationName, String specializationCode, String description) {
         this.specializationId = specializationId;
         this.specializationName = specializationName;
         this.specializationCode = specializationCode;
+        this.description = description;
+    }
+
+    public Specialization(int specializationId, String specializationName, String specializationCode) {
+        this(specializationId, specializationName, specializationCode, null);
     }
 
     public int getSpecializationId() {
@@ -41,6 +47,14 @@ public class Specialization {
         this.specializationCode = specializationCode;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -64,6 +78,7 @@ public class Specialization {
                 "specializationId=" + specializationId +
                 ", specializationName='" + specializationName + '\'' +
                 ", specializationCode='" + specializationCode + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

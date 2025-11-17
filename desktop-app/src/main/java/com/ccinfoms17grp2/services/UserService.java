@@ -4,6 +4,7 @@ import com.ccinfoms17grp2.dao.DaoException;
 import com.ccinfoms17grp2.dao.UserDAO;
 import com.ccinfoms17grp2.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +36,39 @@ public class UserService {
         } catch (DaoException ex) {
             throw new ValidationException("Failed to retrieve users");
         }
+    }
+
+    public User createUser(User user) {
+        validateUserData(user, false);
+        ensureEmailAvailable(user.getEmail(), null);
+        try {
+            return userDAO.create(user);
+        } catch (DaoException ex) {
+            throw new ValidationException("Failed to create user");
+        }
+    }
+
+    public List<User> searchUsers(String keyword) {
+        List<User> allUsers = listUsers();
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return allUsers;
+        }
+        String normalized = keyword.trim().toLowerCase();
+        List<User> filtered = new ArrayList<>();
+        for (User user : allUsers) {
+            if (user.getEmail() != null && user.getEmail().toLowerCase().contains(normalized)) {
+                filtered.add(user);
+                continue;
+            }
+            if (user.getUserType() != null && user.getUserType().name().toLowerCase().contains(normalized)) {
+                filtered.add(user);
+                continue;
+            }
+            if (String.valueOf(user.getPersonId()).contains(normalized)) {
+                filtered.add(user);
+            }
+        }
+        return filtered;
     }
 
     /**
@@ -125,7 +159,8 @@ public class UserService {
             throw new ValidationException("Valid user ID is required");
         }
 
-        validateUserData(user, false);
+        validateUserData(user, true);
+        ensureEmailAvailable(user.getEmail(), user.getUserId());
 
         try {
             boolean updated = userDAO.update(user);
@@ -162,17 +197,8 @@ public class UserService {
 
         User user = userOptional.get();
 
-        // Check if email is already taken by another user
-        try {
-            Optional<User> existingUser = userDAO.findByEmail(newEmail);
-            if (existingUser.isPresent() && existingUser.get().getUserId() != userId) {
-                throw new ValidationException("Email address is already in use by another user");
-            }
-        } catch (DaoException ex) {
-            throw new ValidationException("Database error while checking email availability");
-        }
+        ensureEmailAvailable(newEmail, userId);
 
-        // Update email
         user.setEmail(newEmail);
         return updateUser(user);
     }
@@ -281,6 +307,21 @@ public class UserService {
         }
         if (trimmedEmail.length() > 255) {
             throw new ValidationException("Email address is too long");
+        }
+    }
+
+    private void ensureEmailAvailable(String email, Integer existingUserId) {
+        if (email == null) {
+            return;
+        }
+        String trimmedEmail = email.trim();
+        try {
+            Optional<User> existingUser = userDAO.findByEmail(trimmedEmail);
+            if (existingUser.isPresent() && (existingUserId == null || existingUser.get().getUserId() != existingUserId)) {
+                throw new ValidationException("Email address is already in use by another user");
+            }
+        } catch (DaoException ex) {
+            throw new ValidationException("Database error while checking email availability");
         }
     }
 }

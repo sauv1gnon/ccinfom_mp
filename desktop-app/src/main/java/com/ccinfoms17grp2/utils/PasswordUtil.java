@@ -29,25 +29,20 @@ public final class PasswordUtil {
         }
 
         try {
-            // Generate a random salt (16 bytes)
             byte[] salt = generateSalt();
             
-            // Combine password and salt
             byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
             byte[] saltedPassword = new byte[passwordBytes.length + salt.length];
             System.arraycopy(passwordBytes, 0, saltedPassword, 0, passwordBytes.length);
             System.arraycopy(salt, 0, saltedPassword, passwordBytes.length, salt.length);
             
-            // Hash the salted password
             MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
             byte[] hash = digest.digest(saltedPassword);
             
-            // Combine salt and hash for storage
             byte[] saltedHash = new byte[salt.length + hash.length];
             System.arraycopy(salt, 0, saltedHash, 0, salt.length);
             System.arraycopy(hash, 0, saltedHash, salt.length, hash.length);
             
-            // Convert to hexadecimal string
             return bytesToHex(saltedHash);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 algorithm not available", e);
@@ -57,7 +52,7 @@ public final class PasswordUtil {
     /**
      * Verify a password against its hash
      * @param password the plain text password to verify
-     * @param hash the stored hash (including salt)
+     * @param hash the stored hash (including salt for salted hashes, or plain SHA2 hash)
      * @return true if password matches the hash
      */
     public static boolean verifyPassword(String password, String hash) {
@@ -67,21 +62,22 @@ public final class PasswordUtil {
         }
 
         try {
-            // Convert hex string back to bytes
+            String simpleHash = simpleHash(password);
+            if (simpleHash.equals(hash)) {
+                System.out.println("Password verified using simple hash (database SHA2 format)");
+                return true;
+            }
             byte[] saltedHash = hexToBytes(hash);
             if (saltedHash.length < 16) { // Minimum salt size
                 return false;
             }
 
-            // Extract salt (first 16 bytes)
             byte[] salt = new byte[16];
             System.arraycopy(saltedHash, 0, salt, 0, 16);
 
-            // Extract hash (remaining bytes)
             byte[] storedHash = new byte[saltedHash.length - 16];
             System.arraycopy(saltedHash, 16, storedHash, 0, storedHash.length);
 
-            // Hash the input password with the extracted salt
             byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
             byte[] saltedPassword = new byte[passwordBytes.length + salt.length];
             System.arraycopy(passwordBytes, 0, saltedPassword, 0, passwordBytes.length);
@@ -90,10 +86,8 @@ public final class PasswordUtil {
             MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
             byte[] computedHash = digest.digest(saltedPassword);
 
-            // Compare the hashes
             return MessageDigest.isEqual(storedHash, computedHash);
         } catch (Exception e) {
-            // Log the exception for debugging
             System.err.println("Password verification error: " + e.getMessage());
             return false;
         }
@@ -171,7 +165,6 @@ public final class PasswordUtil {
         if (hash == null || hash.trim().isEmpty()) {
             return false;
         }
-        // Check if it's a valid hex string and minimum length for salted hash
         try {
             byte[] bytes = hexToBytes(hash);
             return bytes.length >= 32; // Minimum 256 bits for SHA256 + 128 bits for salt

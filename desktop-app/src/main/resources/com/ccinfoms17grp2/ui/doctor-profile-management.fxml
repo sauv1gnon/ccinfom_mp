@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@app.css"
+            prefHeight="600.0" prefWidth="700.0">
+    
+    <!-- Header -->
+    <top>
+        <VBox styleClass="header" spacing="10">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            
+            <Label fx:id="titleLabel" text="My Profile" styleClass="title">
+                <font><Font size="24" /></font>
+            </Label>
+        </VBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <VBox spacing="20">
+                <padding><Insets top="20" right="40" bottom="20" left="40"/></padding>
+                
+                <!-- Basic Information -->
+                <VBox spacing="10">
+                    <Label text="Basic Information" styleClass="section-title">
+                        <font><Font size="16" /></font>
+                    </Label>
+                    
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150" prefWidth="150"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        
+                        <Label text="First Name *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="firstNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        
+                        <Label text="Last Name *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        
+                        <Label text="Email" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    </GridPane>
+                </VBox>
+                
+                <Separator/>
+                
+                <!-- Availability Settings -->
+                <VBox spacing="10">
+                    <Label text="Availability Settings" styleClass="section-title">
+                        <font><Font size="16" /></font>
+                    </Label>
+                    
+                    <VBox spacing="10">
+                        <Label text="Availability Status *" styleClass="form-label"/>
+                        <ComboBox fx:id="availabilityStatusComboBox" prefWidth="250"/>
+                    </VBox>
+                    
+                    <VBox spacing="10">
+                        <Label text="Availability Date/Time Ranges (JSON)" styleClass="form-label"/>
+                        <TextArea fx:id="availabilityRangesTextArea" 
+                                  wrapText="true" 
+                                  prefRowCount="5"
+                                  promptText='Example: [{"start": "2025-11-15T09:00", "end": "2025-11-15T17:00"}]'/>
+                        <Label text="Format: JSON array of objects with 'start' and 'end' datetime fields" 
+                               styleClass="help-text" style="-fx-font-size: 11px; -fx-text-fill: gray;"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Action Buttons -->
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <padding><Insets top="20"/></padding>
+                    <Button fx:id="saveButton" text="Save Changes" onAction="#handleSave" 
+                            styleClass="btn-primary" prefWidth="150" prefHeight="35"/>
+                    <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" 
+                            styleClass="btn-secondary" prefWidth="100" prefHeight="35"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

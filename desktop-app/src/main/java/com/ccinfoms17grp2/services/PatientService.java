@@ -23,6 +23,13 @@ public class PatientService {
         return patientDAO.findAll();
     }
 
+    public Optional<Patient> getPatientById(int patientId) {
+        if (patientId <= 0) {
+            return Optional.empty();
+        }
+        return patientDAO.findById(patientId);
+    }
+
     public List<Patient> searchPatients(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return listPatients();

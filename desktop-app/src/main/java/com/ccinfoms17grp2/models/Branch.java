@@ -8,17 +8,24 @@ public class Branch {
     private int branchId;
     private String branchName;
     private String address;
+    private Double latitude;
+    private Double longitude;
     private int capacity;
+    private String contactNumber;
     private LocalDateTime createdAt;
 
     public Branch() {
     }
 
-    public Branch(int branchId, String branchName, String address, int capacity, LocalDateTime createdAt) {
+    public Branch(int branchId, String branchName, String address, Double latitude, Double longitude, 
+                  int capacity, String contactNumber, LocalDateTime createdAt) {
         this.branchId = branchId;
         this.branchName = branchName;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.capacity = capacity;
+        this.contactNumber = contactNumber;
         this.createdAt = createdAt;
     }
 
@@ -38,6 +45,10 @@ public class Branch {
         this.branchName = branchName;
     }
 
+    public String getName() {
+        return branchName;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -46,12 +57,36 @@ public class Branch {
         this.address = address;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     public int getCapacity() {
         return capacity;
     }
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -85,7 +120,10 @@ public class Branch {
                 "branchId=" + branchId +
                 ", branchName='" + branchName + '\'' +
                 ", address='" + address + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 ", capacity=" + capacity +
+                ", contactNumber='" + contactNumber + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

@@ -19,6 +19,13 @@ public class BranchService {
         return branchDAO.findAll();
     }
 
+    public Optional<Branch> getBranchById(int branchId) {
+        if (branchId <= 0) {
+            return Optional.empty();
+        }
+        return branchDAO.findById(branchId);
+    }
+
     public Branch createBranch(Branch branch) {
         validate(branch, false);
         if (branchDAO.existsByName(branch.getBranchName())) {

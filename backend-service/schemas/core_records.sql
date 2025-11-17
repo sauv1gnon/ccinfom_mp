@@ -38,3 +38,11 @@ CREATE TABLE IF NOT EXISTS branch_records (
     capacity INT,
     contact_number VARCHAR(15)
 );
+
+CREATE TABLE IF NOT EXISTS doctor_branch_assignment (
+    doctor_id INT NOT NULL,
+    branch_id INT NOT NULL,
+    PRIMARY KEY (doctor_id, branch_id),
+    FOREIGN KEY (doctor_id) REFERENCES doctor_records(doctor_id) ON DELETE CASCADE,
+    FOREIGN KEY (branch_id) REFERENCES branch_records(branch_id) ON DELETE CASCADE
+);

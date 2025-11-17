@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ccinfoms17grp2.ui.SpecializationListController"
+            prefWidth="1000.0" prefHeight="700.0">
+    
+    <top>
+        <VBox styleClass="toolbar" spacing="10.0">
+            <padding>
+                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+            
+            <Label text="Specialization Management" styleClass="toolbar-title">
+                <font>
+                    <Font name="Segoe UI Semibold" size="20.0" />
+                </font>
+            </Label>
+            
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="createButton" text="Create Specialization" onAction="#handleCreate" styleClass="button-primary"/>
+                <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" styleClass="button-secondary"/>
+                <Button fx:id="backButton" text="Back to Dashboard" onAction="#handleBack" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="10.0">
+            <padding>
+                <Insets top="10.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+            
+            <TableView fx:id="specializationTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="specializationIdColumn" text="ID" prefWidth="60.0"/>
+                    <TableColumn fx:id="nameColumn" text="Name" prefWidth="250.0"/>
+                    <TableColumn fx:id="codeColumn" text="Code" prefWidth="120.0"/>
+                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="400.0"/>
+                </columns>
+            </TableView>
+            
+            <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                <Button fx:id="editButton" text="Edit Selected" onAction="#handleEdit" styleClass="button-primary"/>
+                <Button fx:id="deleteButton" text="Delete Selected" onAction="#handleDelete" styleClass="button-danger"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -89,6 +89,30 @@ public class AppointmentDetailsController implements Initializable {
         navigateToHomepage();
     }
 
+    @FXML
+    private void handleCancelAppointment() {
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            UiUtils.showWarning("Already Cancelled", "This appointment is already cancelled.");
+            return;
+        }
+
+        boolean confirmed = UiUtils.showConfirmation(
+            "Cancel Appointment",
+            "Are you sure you want to cancel this appointment?"
+        );
+
+        if (confirmed) {
+            try {
+                services.getAppointmentService().cancelAppointment(appointment.getAppointmentId());
+                appointment.setStatus(AppointmentStatus.CANCELLED);
+                statusLabel.setText(appointment.getStatus().toString());
+                UiUtils.showInformation("Success", "Appointment cancelled successfully.");
+            } catch (Exception ex) {
+                UiUtils.showError("Cancellation Failed", "Failed to cancel appointment", ex);
+            }
+        }
+    }
+
     private void navigateToAppointmentList() {
         Stage stage = (Stage) appointmentIdLabel.getScene().getWindow();
         try {

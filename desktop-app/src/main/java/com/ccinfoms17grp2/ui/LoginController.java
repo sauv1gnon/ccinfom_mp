@@ -136,10 +136,10 @@ public class LoginController implements Initializable {
         
         if (user.getUserType() == User.UserType.ADMIN) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/dashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/admin-dashboard.fxml"));
                 loader.setControllerFactory(controllerClass -> {
-                    if (controllerClass == DashboardController.class) {
-                        return new DashboardController(services, user);
+                    if (controllerClass == AdminDashboardController.class) {
+                        return new AdminDashboardController(services, user);
                     }
                     try {
                         return controllerClass.getDeclaredConstructor().newInstance();
@@ -150,7 +150,25 @@ public class LoginController implements Initializable {
                 
                 stage.getScene().setRoot(loader.load());
             } catch (Exception ex) {
-                UiUtils.showError("Navigation Error", "Failed to navigate to dashboard", ex);
+                UiUtils.showError("Navigation Error", "Failed to navigate to admin dashboard", ex);
+            }
+        } else if (user.getUserType() == User.UserType.DOCTOR) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/doctor-dashboard.fxml"));
+                loader.setControllerFactory(controllerClass -> {
+                    if (controllerClass == DoctorDashboardController.class) {
+                        return new DoctorDashboardController(services, user);
+                    }
+                    try {
+                        return controllerClass.getDeclaredConstructor().newInstance();
+                    } catch (Exception ex) {
+                        throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                    }
+                });
+                
+                stage.getScene().setRoot(loader.load());
+            } catch (Exception ex) {
+                UiUtils.showError("Navigation Error", "Failed to navigate to doctor dashboard", ex);
             }
         } else {
             try {

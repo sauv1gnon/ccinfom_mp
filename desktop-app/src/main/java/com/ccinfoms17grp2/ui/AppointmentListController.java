@@ -140,6 +140,36 @@ public class AppointmentListController implements Initializable {
         navigateToBookAppointment();
     }
 
+    @FXML
+    private void handleCancelAppointment() {
+        Appointment selected = appointmentTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            UiUtils.showWarning("No Selection", "Please select an appointment to cancel.");
+            return;
+        }
+
+        if (selected.getStatus() == AppointmentStatus.CANCELLED) {
+            UiUtils.showWarning("Already Cancelled", "This appointment is already cancelled.");
+            return;
+        }
+
+        boolean confirmed = UiUtils.showConfirmation(
+            "Cancel Appointment",
+            "Are you sure you want to cancel this appointment?"
+        );
+
+        if (confirmed) {
+            try {
+                services.getAppointmentService().cancelAppointment(selected.getAppointmentId());
+                selected.setStatus(AppointmentStatus.CANCELLED);
+                appointmentTable.refresh();
+                UiUtils.showInformation("Success", "Appointment cancelled successfully.");
+            } catch (Exception ex) {
+                UiUtils.showError("Cancellation Failed", "Failed to cancel appointment", ex);
+            }
+        }
+    }
+
     private void navigateToHomepage() {
         Stage stage = (Stage) appointmentTable.getScene().getWindow();
         try {

@@ -4,6 +4,7 @@ module com.ccinfoms.desktopapp {
 	requires java.sql;
 	requires java.logging;
 	requires java.naming;
+	requires com.google.gson;
 
 	exports com.ccinfoms17grp2;
 	exports com.ccinfoms17grp2.models;

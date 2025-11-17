@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ccinfoms17grp2.ui.DoctorListController"
+            prefWidth="1100.0" prefHeight="700.0">
+    
+    <top>
+        <VBox styleClass="toolbar" spacing="10.0">
+            <padding>
+                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+            
+            <Label text="Doctor Management" styleClass="toolbar-title">
+                <font>
+                    <Font name="Segoe UI Semibold" size="20.0" />
+                </font>
+            </Label>
+            
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Search by name..." prefWidth="250.0"/>
+                <Button text="Search" onAction="#handleSearch" styleClass="button-primary"/>
+                <ComboBox fx:id="statusFilterComboBox" prefWidth="150.0"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="createButton" text="Create Doctor" onAction="#handleCreate" styleClass="button-primary"/>
+                <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" styleClass="button-secondary"/>
+                <Button fx:id="backButton" text="Back" onAction="#handleBack" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="10.0">
+            <padding>
+                <Insets top="10.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+            
+            <TableView fx:id="doctorTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="doctorIdColumn" text="ID" prefWidth="50.0"/>
+                    <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="120.0"/>
+                    <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="120.0"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200.0"/>
+                    <TableColumn fx:id="specializationsColumn" text="Specializations" prefWidth="150.0"/>
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0"/>
+                    <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="160.0"/>
+                </columns>
+            </TableView>
+            
+            <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                <Button fx:id="editButton" text="Edit" onAction="#handleEdit" styleClass="button-primary"/>
+                <Button fx:id="manageBranchesButton" text="Manage Branches" onAction="#handleManageBranches" styleClass="button-primary"/>
+                <Button fx:id="deleteButton" text="Delete" onAction="#handleDelete" styleClass="button-danger"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

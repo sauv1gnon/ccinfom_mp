@@ -2,6 +2,7 @@ package com.ccinfoms17grp2.services;
 
 import com.ccinfoms17grp2.dao.DoctorDAO;
 import com.ccinfoms17grp2.dao.SpecializationDAO;
+import com.ccinfoms17grp2.models.Branch;
 import com.ccinfoms17grp2.models.Doctor;
 import com.ccinfoms17grp2.models.DoctorAvailabilityStatus;
 
@@ -21,6 +22,13 @@ public class DoctorService {
 
     public List<Doctor> listDoctors() {
         return doctorDAO.findAll();
+    }
+
+    public Optional<Doctor> getDoctorById(int doctorId) {
+        if (doctorId <= 0) {
+            return Optional.empty();
+        }
+        return doctorDAO.findById(doctorId);
     }
 
     public Doctor createDoctor(Doctor doctor) {
@@ -66,8 +74,78 @@ public class DoctorService {
         if (status == null) {
             throw new ValidationException("Availability status must be specified.");
         }
-        if (doctor.getSpecializationId() != null && specializationDAO.findById(doctor.getSpecializationId()).isEmpty()) {
-            throw new ValidationException("Selected specialization does not exist.");
+        if (doctor.getSpecializationIds() != null && !doctor.getSpecializationIds().isEmpty()) {
+            for (Integer specId : doctor.getSpecializationIds()) {
+                if (specializationDAO.findById(specId).isEmpty()) {
+                    throw new ValidationException("Specialization with ID " + specId + " does not exist.");
+                }
+            }
         }
+    }
+
+    public List<Doctor> getDoctorsByBranch(int branchId) {
+        return doctorDAO.findByBranchId(branchId);
+    }
+
+    public List<Doctor> getDoctorsByBranchAndSpecializations(int branchId, List<Integer> specializationIds) {
+        return doctorDAO.findByBranchAndSpecializations(branchId, specializationIds);
+    }
+
+    public List<Doctor> getDoctorsByAvailabilityStatus(DoctorAvailabilityStatus status) {
+        return doctorDAO.findByAvailabilityStatus(status);
+    }
+
+    public List<Doctor> findDoctorsByAvailability(DoctorAvailabilityStatus status) {
+        if (status == null) {
+            return listDoctors();
+        }
+        return getDoctorsByAvailabilityStatus(status);
+    }
+
+    public List<Doctor> searchDoctors(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return listDoctors();
+        }
+        String normalized = keyword.trim().toLowerCase();
+        List<Doctor> matches = new java.util.ArrayList<>();
+        for (Doctor doctor : listDoctors()) {
+            if (doctor.getLastName() != null && doctor.getLastName().toLowerCase().contains(normalized)) {
+                matches.add(doctor);
+                continue;
+            }
+            if (doctor.getFirstName() != null && doctor.getFirstName().toLowerCase().contains(normalized)) {
+                matches.add(doctor);
+                continue;
+            }
+            if (doctor.getEmail() != null && doctor.getEmail().toLowerCase().contains(normalized)) {
+                matches.add(doctor);
+                continue;
+            }
+            if (!doctor.getSpecializationIds().isEmpty() && doctor.getSpecializationIds().stream()
+                .map(String::valueOf)
+                .anyMatch(id -> id.contains(normalized))) {
+                matches.add(doctor);
+            }
+        }
+        return matches;
+    }
+
+    public List<Branch> getBranchesForDoctor(int doctorId) {
+        if (doctorId <= 0) {
+            return List.of();
+        }
+        return doctorDAO.findBranchesForDoctor(doctorId);
+    }
+
+    public void assignDoctorToBranches(int doctorId, List<Integer> branchIds) {
+        if (doctorId <= 0) {
+            throw new ValidationException("Doctor ID is invalid.");
+        }
+        List<Integer> assignments = branchIds == null ? List.of() : branchIds;
+        Optional<Doctor> existing = doctorDAO.findById(doctorId);
+        if (existing.isEmpty()) {
+            throw new ValidationException("Doctor could not be found.");
+        }
+        doctorDAO.updateBranchAssignments(doctorId, assignments);
     }
 }

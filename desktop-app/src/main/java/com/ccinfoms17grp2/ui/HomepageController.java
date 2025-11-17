@@ -46,6 +46,11 @@ public class HomepageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Redirect doctors to their dedicated dashboard
+        if (currentUser.getUserType() == User.UserType.DOCTOR) {
+            navigateToDoctorDashboard();
+            return;
+        }
         loadUserData();
     }
 
@@ -197,6 +202,27 @@ public class HomepageController implements Initializable {
             stage.getScene().setRoot(loader.load());
         } catch (Exception ex) {
             UiUtils.showError("Navigation Error", "Failed to navigate to queue list screen", ex);
+        }
+    }
+    
+    private void navigateToDoctorDashboard() {
+        Stage stage = (Stage) signOutButton.getScene().getWindow();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/doctor-dashboard.fxml"));
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == DoctorDashboardController.class) {
+                    return new DoctorDashboardController(services, currentUser);
+                }
+                try {
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception ex) {
+                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
+                }
+            });
+            
+            stage.getScene().setRoot(loader.load());
+        } catch (Exception ex) {
+            UiUtils.showError("Navigation Error", "Failed to navigate to doctor dashboard", ex);
         }
     }
 

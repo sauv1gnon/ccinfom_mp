@@ -69,7 +69,6 @@ public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
                     patient.setPatientId(generatedId);
                 }
             }
-            // fetch created_at from database
             return findById(patient.getPatientId()).orElse(patient);
         } catch (SQLException ex) {
             throw translateException("Failed to create patient", ex);

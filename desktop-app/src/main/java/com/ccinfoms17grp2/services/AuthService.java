@@ -49,22 +49,17 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        // Check if user account is active
         if (!user.isActive()) {
             throw new AuthenticationException("Account is deactivated. Please contact support.");
         }
 
-        // Verify password hash
-        String passwordHash = PasswordUtil.hashPassword(password);
-        if (!passwordHash.equals(user.getPasswordHash())) {
+        if (!PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
             throw new AuthenticationException("Invalid email or password");
         }
 
-        // Update last login time
         try {
             userDAO.updateLastLogin(user.getUserId(), LocalDateTime.now());
         } catch (DaoException ex) {
-            // Log error but don't fail authentication
             System.err.println("Failed to update last login time: " + ex.getMessage());
         }
 
@@ -118,13 +113,10 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        // Verify current password
-        String currentPasswordHash = PasswordUtil.hashPassword(currentPassword);
-        if (!currentPasswordHash.equals(user.getPasswordHash())) {
+        if (!PasswordUtil.verifyPassword(currentPassword, user.getPasswordHash())) {
             throw new AuthenticationException("Current password is incorrect");
         }
 
-        // Update password
         String newPasswordHash = PasswordUtil.hashPassword(newPassword);
         try {
             boolean updated = userDAO.updatePassword(userId, newPasswordHash);
@@ -143,8 +135,6 @@ public class AuthService {
      * @throws AuthenticationException if reset fails
      */
     public void resetPassword(String token, String newPassword) {
-        // Implementation would use password reset tokens table
-        // This is a simplified version
         validatePassword(newPassword);
         throw new UnsupportedOperationException("Password reset functionality not implemented yet");
     }
@@ -203,14 +193,12 @@ public class AuthService {
             throw new AuthenticationException("Invalid person ID");
         }
 
-        // Check if email already exists
         try {
             Optional<User> existingUser = userDAO.findByEmail(email);
             if (existingUser.isPresent()) {
                 throw new AuthenticationException("Email address is already registered");
             }
 
-            // Check if person already has a user account
             Optional<User> existingPersonUser = userDAO.findByPersonId(personId);
             if (existingPersonUser.isPresent()) {
                 throw new AuthenticationException("This person already has a user account");
@@ -219,7 +207,6 @@ public class AuthService {
             throw new AuthenticationException("Database error during registration", ex);
         }
 
-        // Create new user
         User user = new User();
         user.setEmail(email);
         user.setPasswordHash(PasswordUtil.hashPassword(password));
