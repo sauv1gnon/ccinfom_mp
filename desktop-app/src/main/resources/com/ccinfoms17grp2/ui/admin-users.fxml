@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminUsersController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Users" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Add User" onAction="#handleAddUser" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Edit User" onAction="#handleEditUser" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Delete User" onAction="#handleDeleteUser" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by email..." prefWidth="250"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="userIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="250"/>
+            <TableColumn fx:id="userTypeColumn" text="Type" prefWidth="120"/>
+            <TableColumn fx:id="activeColumn" text="Active" prefWidth="80"/>
+            <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

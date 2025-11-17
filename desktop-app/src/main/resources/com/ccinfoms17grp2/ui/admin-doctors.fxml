@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminDoctorsController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Doctors" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Add Doctor" onAction="#handleAddDoctor" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Edit Doctor" onAction="#handleEditDoctor" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Delete Doctor" onAction="#handleDeleteDoctor" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="Assign to Branch" onAction="#handleAssignToBranch" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by name..." prefWidth="250"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="doctorIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="150"/>
+            <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="150"/>
+            <TableColumn fx:id="specializationColumn" text="Specialization" prefWidth="200"/>
+            <TableColumn fx:id="licenseNumberColumn" text="License #" prefWidth="150"/>
+            <TableColumn fx:id="availabilityColumn" text="Status" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

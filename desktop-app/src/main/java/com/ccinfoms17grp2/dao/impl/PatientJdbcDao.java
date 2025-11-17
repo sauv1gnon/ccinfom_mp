@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
 
-    private static final String BASE_SELECT = "SELECT patient_id, last_name, first_name, contact_number, email, created_at FROM Patient ";
+    private static final String BASE_SELECT = "SELECT patient_id, last_name, first_name, contact_number, email, created_at FROM patient_records ";
     private static final String ORDER_BY = " ORDER BY last_name ASC, first_name ASC";
 
     @Override
@@ -55,7 +55,7 @@ public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
 
     @Override
     public Patient create(Patient patient) throws DaoException {
-        final String sql = "INSERT INTO Patient (last_name, first_name, contact_number, email) VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO patient_records (last_name, first_name, contact_number, email) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, patient.getLastName());
@@ -77,7 +77,7 @@ public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
 
     @Override
     public boolean update(Patient patient) throws DaoException {
-        final String sql = "UPDATE Patient SET last_name = ?, first_name = ?, contact_number = ?, email = ? WHERE patient_id = ?";
+        final String sql = "UPDATE patient_records SET last_name = ?, first_name = ?, contact_number = ?, email = ? WHERE patient_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, patient.getLastName());
@@ -93,7 +93,7 @@ public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        final String sql = "DELETE FROM Patient WHERE patient_id = ?";
+        final String sql = "DELETE FROM patient_records WHERE patient_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

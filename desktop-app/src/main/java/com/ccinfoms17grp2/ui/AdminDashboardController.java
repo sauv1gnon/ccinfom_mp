@@ -1,184 +1,216 @@
 package com.ccinfoms17grp2.ui;
 
+import com.ccinfoms17grp2.models.AppointmentStatus;
+import com.ccinfoms17grp2.models.Branch;
 import com.ccinfoms17grp2.models.User;
 import com.ccinfoms17grp2.services.ServiceRegistry;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
+import javafx.scene.control.TextInputDialog;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * Admin Dashboard controller with navigation to all management modules
- */
-public class AdminDashboardController implements Initializable {
-
-    @FXML
-    private Label welcomeLabel;
-    @FXML
-    private Button signOutButton;
-
-    private final ServiceRegistry services;
-    private final User currentUser;
-
-    public AdminDashboardController(ServiceRegistry services, User currentUser) {
-        this.services = services;
-        this.currentUser = currentUser;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        if (currentUser != null) {
-            welcomeLabel.setText("Welcome, Admin");
-        }
-    }
+public class AdminDashboardController implements ViewController {
+    private SceneNavigator navigator;
+    private ServiceRegistry services;
+    private SessionContext session;
 
     @FXML
-    private void handleSignOut() {
-        navigateToLogin();
-    }
+    private Label statusLabel;
 
     @FXML
     private void handleManageUsers() {
-        navigateTo("/com/ccinfoms17grp2/ui/user-list.fxml", 
-                   UserListController.class, 
-                   "User Management",
-                   () -> new UserListController(services, currentUser));
+        navigator.show(UiView.ADMIN_USERS);
     }
 
     @FXML
     private void handleManagePatients() {
-        navigateTo("/com/ccinfoms17grp2/ui/patient-list.fxml", 
-                   PatientListController.class, 
-                   "Patient Management",
-                   () -> new PatientListController(services, currentUser));
+        navigator.show(UiView.ADMIN_PATIENTS);
     }
 
     @FXML
     private void handleManageDoctors() {
-        navigateTo("/com/ccinfoms17grp2/ui/doctor-list.fxml", 
-                   DoctorListController.class, 
-                   "Doctor Management",
-                   () -> new DoctorListController(services, currentUser));
-    }
-
-    @FXML
-    private void handleManageBranches() {
-        navigateTo("/com/ccinfoms17grp2/ui/branch-list.fxml", 
-                   BranchListController.class, 
-                   "Branch Management",
-                   () -> new BranchListController(services, currentUser));
+        navigator.show(UiView.ADMIN_DOCTORS);
     }
 
     @FXML
     private void handleManageSpecializations() {
-        navigateTo("/com/ccinfoms17grp2/ui/specialization-list.fxml", 
-                   SpecializationListController.class, 
-                   "Specialization Management",
-                   () -> new SpecializationListController(services, currentUser));
+        navigator.show(UiView.ADMIN_SPECIALIZATIONS);
     }
 
     @FXML
-    private void handleManageAppointments() {
-        navigateTo("/com/ccinfoms17grp2/ui/appointment-list.fxml", 
-                   AppointmentListController.class, 
-                   "Appointment Management",
-                   () -> new AppointmentListController(services, currentUser));
+    private void handleConfirmPatientAppointment() {
+        if (!ensureServices()) {
+            return;
+        }
+        promptAppointmentId("Confirm Appointment").ifPresent(appointmentId -> {
+            try {
+                services.getAppointmentService().updateAppointmentStatus(appointmentId, AppointmentStatus.IN_PROGRESS);
+                updateStatus("Appointment #" + appointmentId + " confirmed");
+            } catch (RuntimeException ex) {
+                reportError("Unable to confirm appointment", ex);
+            }
+        });
     }
 
     @FXML
-    private void handleManageConsultations() {
-        navigateTo("/com/ccinfoms17grp2/ui/consultation-list.fxml", 
-                   ConsultationListController.class, 
-                   "Consultation Management",
-                   () -> new ConsultationListController(services, currentUser));
+    private void handleCancelPatientAppointment() {
+        if (!ensureServices()) {
+            return;
+        }
+        promptAppointmentId("Cancel Appointment").ifPresent(appointmentId -> {
+            try {
+                services.getAppointmentService().cancelAppointment(appointmentId);
+                updateStatus("Appointment #" + appointmentId + " canceled");
+            } catch (RuntimeException ex) {
+                reportError("Unable to cancel appointment", ex);
+            }
+        });
+    }
+
+    @FXML
+    private void handleAssignDoctors() {
+        if (!ensureServices()) {
+            return;
+        }
+        promptBranch("Select branch for assignments").ifPresent(branch -> {
+            try {
+                int count = services.getDoctorService().getDoctorsByBranch(branch.getBranchId()).size();
+                updateStatus("Branch " + branch.getBranchName() + " has " + count + " assigned doctors");
+            } catch (RuntimeException ex) {
+                reportError("Unable to load doctor assignments", ex);
+            }
+        });
     }
 
     @FXML
     private void handleManageQueues() {
-        navigateTo("/com/ccinfoms17grp2/ui/queue-list.fxml", 
-                   QueueListController.class, 
-                   "Queue Management",
-                   () -> new QueueListController(services, currentUser));
+        navigator.show(UiView.ADMIN_QUEUES);
     }
 
-    @SuppressWarnings("UseSpecificCatch")
-    private void navigateToLogin() {
-        Stage stage = new Stage();
+    @FXML
+    private void handleManageBranchAppointments() {
+        navigator.show(UiView.ADMIN_BRANCHES);
+    }
+
+    @FXML
+    private void handleManageAppointments() {
+        navigator.show(UiView.ADMIN_APPOINTMENTS);
+    }
+
+    @FXML
+    private void handleManageConsultations() {
+        navigator.show(UiView.ADMIN_CONSULTATIONS);
+    }
+
+    @FXML
+    private void handleMonitorQueues() {
+        navigator.show(UiView.ADMIN_QUEUES);
+    }
+
+    @FXML
+    private void handleSignOut() {
+        if (session != null) {
+            session.clear();
+        }
+        navigator.show(UiView.LOGIN);
+    }
+
+    @Override
+    public void setNavigator(SceneNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    @Override
+    public void setServices(ServiceRegistry services) {
+        this.services = services;
+    }
+
+    @Override
+    public void setSession(SessionContext session) {
+        this.session = session;
+    }
+
+    @Override
+    public void onDisplay() {
+        if (session == null || !session.isUserType(User.UserType.ADMIN)) {
+            statusLabel.setText("Admin access required");
+            return;
+        }
+        statusLabel.setText("Overview of operations");
+    }
+
+    private boolean ensureServices() {
+        if (services == null) {
+            updateStatus("Service registry unavailable");
+            return false;
+        }
+        return true;
+    }
+
+    private void updateStatus(String message) {
+        statusLabel.setText(message);
+    }
+
+    private void reportError(String action, RuntimeException ex) {
+        updateStatus(action);
+        UiUtils.showError(action, ex.getMessage());
+    }
+
+    private Optional<Integer> promptAppointmentId(String title) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(title + " - enter appointment ID");
+        dialog.setContentText("Appointment ID:");
+        Optional<String> value = dialog.showAndWait();
+        if (!value.isPresent()) {
+            return Optional.empty();
+        }
+        String input = value.get().trim();
+        if (input.isEmpty()) {
+            return Optional.empty();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ccinfoms17grp2/ui/login.fxml"));
-            loader.setControllerFactory(controllerClass -> {
-                if (controllerClass == LoginController.class) {
-                    return new LoginController(new ServiceRegistry());
-                }
-                try {
-                    return controllerClass.getDeclaredConstructor().newInstance();
-                } catch (Exception ex) {
-                    throw new IllegalStateException("Failed to instantiate controller: " + controllerClass, ex);
-                }
-            });
-            
-            Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/com/ccinfoms17grp2/ui/app.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setTitle("Digital Queue and Appointment System");
-            stage.setResizable(false);
-            stage.show();
-            
-            closeCurrentStage();
-            
-        } catch (IOException ex) {
-            UiUtils.showError("Navigation Error", "Failed to navigate to login screen", ex);
+            int appointmentId = Integer.parseInt(input);
+            return Optional.of(appointmentId);
+        } catch (NumberFormatException ex) {
+            updateStatus("Invalid appointment ID");
+            return Optional.empty();
         }
     }
 
-    @SuppressWarnings("UseSpecificCatch")
-    private <T> void navigateTo(String fxmlPath, Class<T> controllerClass, String title, ControllerSupplier<T> supplier) {
-        Stage stage = new Stage();
+    private Optional<Branch> promptBranch(String header) {
+        List<Branch> branches = services.getBranchService().listBranches();
+        if (branches.isEmpty()) {
+            UiUtils.showWarning("Branches", "No branches configured");
+            return Optional.empty();
+        }
+        List<String> options = new ArrayList<>();
+        for (Branch branch : branches) {
+            options.add(branch.getBranchId() + ": " + branch.getBranchName());
+        }
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
+        dialog.setTitle("Select Branch");
+        dialog.setHeaderText(header);
+        dialog.setContentText("Branch:");
+        Optional<String> selection = dialog.showAndWait();
+        if (!selection.isPresent()) {
+            return Optional.empty();
+        }
+        String choice = selection.get();
+        int separatorIndex = choice.indexOf(':');
+        if (separatorIndex <= 0) {
+            return Optional.empty();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            loader.setControllerFactory(clazz -> {
-                if (clazz == controllerClass) {
-                    return supplier.get();
-                }
-                try {
-                    return clazz.getDeclaredConstructor().newInstance();
-                } catch (Exception ex) {
-                    throw new IllegalStateException("Failed to instantiate controller: " + clazz, ex);
-                }
-            });
-            
-            Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/com/ccinfoms17grp2/ui/app.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setTitle(title);
-            stage.setResizable(true);
-            stage.show();
-            
-            closeCurrentStage();
-            
-        } catch (IOException ex) {
-            UiUtils.showError("Navigation Error", "Failed to navigate to " + title, ex);
+            int branchId = Integer.parseInt(choice.substring(0, separatorIndex).trim());
+            return branches.stream().filter(branch -> branch.getBranchId() == branchId).findFirst();
+        } catch (NumberFormatException ex) {
+            updateStatus("Invalid branch selection");
+            return Optional.empty();
         }
-    }
-
-    private void closeCurrentStage() {
-        Stage currentStage = (Stage) signOutButton.getScene().getWindow();
-        if (currentStage != null) {
-            currentStage.close();
-        }
-    }
-
-    @FunctionalInterface
-    private interface ControllerSupplier<T> {
-        T get();
     }
 }

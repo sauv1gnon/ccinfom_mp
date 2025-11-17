@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminConsultationsController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Consultations" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="View Details" onAction="#handleViewDetails" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by ID..." prefWidth="150"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="consultationsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="consultationIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="appointmentIdColumn" text="Appointment ID" prefWidth="120"/>
+            <TableColumn fx:id="diagnosisColumn" text="Diagnosis" prefWidth="250"/>
+            <TableColumn fx:id="treatmentPlanColumn" text="Treatment Plan" prefWidth="250"/>
+            <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

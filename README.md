@@ -38,13 +38,6 @@ Login -> Homepage
                 -> View Records Details
 ```
 
-Business Logic for Booking Appointment with Multiple Specializations:
-- During appointment booking, patients can select multiple specializations to ensure they receive comprehensive care tailored to their needs.
-- During booking, after the patients has selected their prefered date & time schedule, the patient can click "Recommend" to load a list of branches. 
-- The patient can select a branch from a list of branches that offer the selected specializations using their own location, allowing them to choose the most convenient location for their appointment. 
-- After fulfillment of details, the system will display a list of available doctors in the selected branch who match the patient's chosen specializations.
-- Logic must display available doctors, as well as doctors whose specializations match the patient's selected specializations even if the preferred doctor is not available at that time, so that patients can consider alternative options or reschedule if necessary.
-
 **Doctor Portal UI/UX Design:**
 - The doctor portal provides functionalities for managing patient appointments, viewing medical histories, and updating treatment plans.
 - The design prioritizes efficiency, clarity, and quick access to critical information for healthcare professionals.

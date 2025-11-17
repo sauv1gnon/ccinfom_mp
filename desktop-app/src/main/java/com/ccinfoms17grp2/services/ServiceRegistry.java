@@ -28,6 +28,9 @@ public class ServiceRegistry {
     private final AppointmentService appointmentService;
     private final ConsultationService consultationService;
     private final QueueService queueService;
+    private final GeocodingService geocodingService;
+    private final RoutingService routingService;
+    private final EnhancedBranchSearchService enhancedBranchSearchService;
 
     public ServiceRegistry() {
         this(new PatientJdbcDao(), new DoctorJdbcDao(), new SpecializationJdbcDao(),
@@ -39,8 +42,7 @@ public class ServiceRegistry {
                           SpecializationDAO specializationDAO, BranchDAO branchDAO,
                           UserDAO userDAO, AppointmentDAO appointmentDAO, ConsultationDAO consultationDAO,
                           QueueDAO queueDAO) {
-        SpecializationService specializationService = new SpecializationService(specializationDAO);
-        this.specializationService = specializationService;
+        this.specializationService = new SpecializationService(specializationDAO);
         this.patientService = new PatientService(patientDAO);
         this.branchService = new BranchService(branchDAO);
         this.doctorService = new DoctorService(doctorDAO, specializationDAO);
@@ -49,6 +51,11 @@ public class ServiceRegistry {
         this.appointmentService = new AppointmentService(appointmentDAO);
         this.consultationService = new ConsultationService(consultationDAO);
         this.queueService = new QueueService(queueDAO);
+        this.geocodingService = new GeocodingService();
+        this.routingService = new RoutingService();
+        this.enhancedBranchSearchService = new EnhancedBranchSearchService(
+            branchDAO, doctorDAO, appointmentDAO, routingService
+        );
     }
 
     public PatientService getPatientService() {
@@ -85,5 +92,17 @@ public class ServiceRegistry {
 
     public QueueService getQueueService() {
         return queueService;
+    }
+
+    public GeocodingService getGeocodingService() {
+        return geocodingService;
+    }
+
+    public RoutingService getRoutingService() {
+        return routingService;
+    }
+
+    public EnhancedBranchSearchService getEnhancedBranchSearchService() {
+        return enhancedBranchSearchService;
     }
 }

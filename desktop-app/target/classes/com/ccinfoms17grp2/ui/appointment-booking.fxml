@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ccinfoms17grp2.ui.AppointmentBookingDialogController"
+            prefWidth="1100.0" prefHeight="700.0">
+    
+    <top>
+        <VBox spacing="8.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 0 0 1 0;">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="15.0" left="20.0" />
+            </padding>
+            <Label text="Book Appointment" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+            <Label fx:id="statusLabel" text="Enter your location to find nearby branches" 
+                   style="-fx-text-fill: #6c757d;" />
+        </VBox>
+    </top>
+    
+    <center>
+        <SplitPane dividerPositions="0.45" orientation="HORIZONTAL">
+            <VBox spacing="15.0">
+                <padding>
+                    <Insets top="20.0" right="15.0" bottom="20.0" left="20.0" />
+                </padding>
+                
+                <VBox spacing="8.0">
+                    <Label text="Location" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <HBox spacing="8.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="locationField" promptText="Enter your location or address" 
+                                   HBox.hgrow="ALWAYS" prefWidth="200.0" />
+                        <Button text="Search" onAction="#handleSearchLocation" 
+                                style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+                    </HBox>
+                    <Label fx:id="locationResultLabel" text="" wrapText="true" 
+                           style="-fx-font-size: 11px; -fx-text-fill: #28a745;" />
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Specialization" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <ComboBox fx:id="specializationCombo" promptText="Select specialization" 
+                              maxWidth="Infinity" />
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Preferred Schedule" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <HBox spacing="8.0" alignment="CENTER_LEFT">
+                        <DatePicker fx:id="datePicker" promptText="Select date" prefWidth="160.0" />
+                        <ComboBox fx:id="timeCombo" promptText="Time" prefWidth="100.0" />
+                    </HBox>
+                </VBox>
+                
+                <Button text="Load Branches" onAction="#handleLoadBranches" 
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"
+                        maxWidth="Infinity" prefHeight="35.0" />
+                
+                <Separator />
+                
+                <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+                    <Label text="Nearby Branches" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                                style="-fx-background-color: white; -fx-border-color: #dee2e6;">
+                        <VBox fx:id="branchListContainer" spacing="8.0">
+                            <padding>
+                                <Insets top="8.0" right="8.0" bottom="8.0" left="8.0" />
+                            </padding>
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+            </VBox>
+            
+            <VBox>
+                <padding>
+                    <Insets top="20.0" right="20.0" bottom="20.0" left="15.0" />
+                </padding>
+                <Label text="Map View" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                <WebView fx:id="mapView" prefHeight="500.0" VBox.vgrow="ALWAYS" />
+            </VBox>
+        </SplitPane>
+    </center>
+    
+    <bottom>
+        <HBox spacing="10.0" alignment="CENTER_RIGHT" 
+              style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="15.0" right="20.0" bottom="15.0" left="20.0" />
+            </padding>
+            <Button text="Cancel" onAction="#handleCancel" prefWidth="100.0" />
+        </HBox>
+    </bottom>
+</BorderPane>

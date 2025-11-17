@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminAppointmentsController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Appointments" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Confirm Appointment" onAction="#handleConfirmAppointment" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Cancel Appointment" onAction="#handleCancelAppointment" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by ID..." prefWidth="150"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="appointmentsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="appointmentIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="patientIdColumn" text="Patient ID" prefWidth="100"/>
+            <TableColumn fx:id="doctorIdColumn" text="Doctor ID" prefWidth="100"/>
+            <TableColumn fx:id="branchIdColumn" text="Branch ID" prefWidth="100"/>
+            <TableColumn fx:id="datetimeColumn" text="Date &amp; Time" prefWidth="180"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
+            <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

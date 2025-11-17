@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminPatientsController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Patients" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Add Patient" onAction="#handleAddPatient" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Edit Patient" onAction="#handleEditPatient" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Delete Patient" onAction="#handleDeletePatient" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by name or email..." prefWidth="250"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="patientsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="patientIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="150"/>
+            <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="150"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
+            <TableColumn fx:id="contactColumn" text="Contact" prefWidth="150"/>
+            <TableColumn fx:id="registeredAtColumn" text="Registered At" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

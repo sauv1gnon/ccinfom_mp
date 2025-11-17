@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
 
-    private static final String BASE_SELECT = "SELECT doctor_id, last_name, first_name, specializations_list, availability_status, created_at FROM doctor_records ";
+    private static final String BASE_SELECT = "SELECT doctor_id, last_name, first_name, email, specializations_list, availability_status, created_at FROM doctor_records ";
     private static final String ORDER_BY = " ORDER BY last_name ASC, first_name ASC";
 
     @Override
@@ -59,13 +59,14 @@ public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
 
     @Override
     public Doctor create(Doctor doctor) throws DaoException {
-        final String sql = "INSERT INTO doctor_records (last_name, first_name, specializations_list, availability_status) VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO doctor_records (last_name, first_name, email, specializations_list, availability_status) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, doctor.getLastName());
             ps.setString(2, doctor.getFirstName());
-            ps.setString(3, serializeSpecializations(doctor.getSpecializationIds()));
-            ps.setString(4, doctor.getAvailabilityStatus().toDatabaseValue());
+            ps.setString(3, doctor.getEmail());
+            ps.setString(4, serializeSpecializations(doctor.getSpecializationIds()));
+            ps.setString(5, doctor.getAvailabilityStatus().toDatabaseValue());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -80,14 +81,15 @@ public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
 
     @Override
     public boolean update(Doctor doctor) throws DaoException {
-        final String sql = "UPDATE doctor_records SET last_name = ?, first_name = ?, specializations_list = ?, availability_status = ? WHERE doctor_id = ?";
+        final String sql = "UPDATE doctor_records SET last_name = ?, first_name = ?, email = ?, specializations_list = ?, availability_status = ? WHERE doctor_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, doctor.getLastName());
             ps.setString(2, doctor.getFirstName());
-            ps.setString(3, serializeSpecializations(doctor.getSpecializationIds()));
-            ps.setString(4, doctor.getAvailabilityStatus().toDatabaseValue());
-            ps.setInt(5, doctor.getDoctorId());
+            ps.setString(3, doctor.getEmail());
+            ps.setString(4, serializeSpecializations(doctor.getSpecializationIds()));
+            ps.setString(5, doctor.getAvailabilityStatus().toDatabaseValue());
+            ps.setInt(6, doctor.getDoctorId());
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) {
             throw translateException("Failed to update doctor with id=" + doctor.getDoctorId(), ex);
@@ -258,12 +260,13 @@ public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
         int doctorId = rs.getInt("doctor_id");
         String lastName = rs.getString("last_name");
         String firstName = rs.getString("first_name");
+        String email = rs.getString("email");
         String specializationsJson = rs.getString("specializations_list");
         List<Integer> specializationIds = parseSpecializations(specializationsJson);
         String statusValue = rs.getString("availability_status");
         DoctorAvailabilityStatus status = DoctorAvailabilityStatus.fromDatabaseValue(statusValue);
         LocalDateTime createdAt = DateTimeUtil.fromTimestamp(rs.getTimestamp("created_at"));
-        return new Doctor(doctorId, lastName, firstName, specializationIds, status, createdAt);
+        return new Doctor(doctorId, lastName, firstName, email, specializationIds, status, createdAt);
     }
 
     private Branch mapBranch(ResultSet rs) throws SQLException {

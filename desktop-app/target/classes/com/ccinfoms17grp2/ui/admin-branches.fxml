@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ccinfoms17grp2.ui.AdminBranchesController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Branches" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Add Branch" onAction="#handleAddBranch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Edit Branch" onAction="#handleEditBranch" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Delete Branch" onAction="#handleDeleteBranch" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="branchesTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="branchIdColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="branchNameColumn" text="Branch Name" prefWidth="250"/>
+            <TableColumn fx:id="addressColumn" text="Address" prefWidth="300"/>
+            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #666;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+    </HBox>
+
+</VBox>

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class SpecializationJdbcDao extends AbstractJdbcDao implements SpecializationDAO {
 
-    private static final String BASE_SELECT = "SELECT specialization_id, specialization_name, specialization_code FROM Specialization ";
+    private static final String BASE_SELECT = "SELECT specialization_id, specialization_name, specialization_code FROM specialization_records ";
     private static final String ORDER_BY = " ORDER BY specialization_name";
 
     @Override
@@ -53,7 +53,7 @@ public class SpecializationJdbcDao extends AbstractJdbcDao implements Specializa
 
     @Override
     public Specialization create(Specialization specialization) throws DaoException {
-        final String sql = "INSERT INTO Specialization (specialization_name, specialization_code) VALUES (?, ?)";
+        final String sql = "INSERT INTO specialization_records (specialization_name, specialization_code) VALUES (?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, specialization.getSpecializationName());
@@ -72,7 +72,7 @@ public class SpecializationJdbcDao extends AbstractJdbcDao implements Specializa
 
     @Override
     public boolean update(Specialization specialization) throws DaoException {
-        final String sql = "UPDATE Specialization SET specialization_name = ?, specialization_code = ? WHERE specialization_id = ?";
+        final String sql = "UPDATE specialization_records SET specialization_name = ?, specialization_code = ? WHERE specialization_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, specialization.getSpecializationName());
@@ -86,7 +86,7 @@ public class SpecializationJdbcDao extends AbstractJdbcDao implements Specializa
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        final String sql = "DELETE FROM Specialization WHERE specialization_id = ?";
+        final String sql = "DELETE FROM specialization_records WHERE specialization_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -98,7 +98,7 @@ public class SpecializationJdbcDao extends AbstractJdbcDao implements Specializa
 
     @Override
     public boolean existsByCode(String code) throws DaoException {
-        final String sql = "SELECT 1 FROM Specialization WHERE specialization_code = ?";
+        final String sql = "SELECT 1 FROM specialization_records WHERE specialization_code = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, code);

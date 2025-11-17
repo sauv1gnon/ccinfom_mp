@@ -3,21 +3,19 @@ package com.ccinfoms17grp2.dao.impl;
 import com.ccinfoms17grp2.dao.BranchDAO;
 import com.ccinfoms17grp2.dao.DaoException;
 import com.ccinfoms17grp2.models.Branch;
-import com.ccinfoms17grp2.utils.DateTimeUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
 
-    private static final String BASE_SELECT = "SELECT branch_id, branch_name, address, latitude, longitude, capacity, contact_number, created_at FROM branch_records ";
+    private static final String BASE_SELECT = "SELECT branch_id, branch_name, address, latitude, longitude, capacity, contact_number FROM branch_records ";
     private static final String ORDER_BY = " ORDER BY branch_name";
 
     @Override
@@ -144,7 +142,6 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDAO {
         Double longitude = rs.getObject("longitude") != null ? rs.getDouble("longitude") : null;
         int capacity = rs.getInt("capacity");
         String contactNumber = rs.getString("contact_number");
-        LocalDateTime createdAt = DateTimeUtil.fromTimestamp(rs.getTimestamp("created_at"));
-        return new Branch(id, name, address, latitude, longitude, capacity, contactNumber, createdAt);
+        return new Branch(id, name, address, latitude, longitude, capacity, contactNumber, null);
     }
 }
