@@ -15,7 +15,6 @@ com\ccinfoms17grp2\services\GeocodingService.class
 com\ccinfoms17grp2\utils\DatabaseConnection.class
 com\ccinfoms17grp2\utils\AvailabilityParser$AvailabilitySlot.class
 com\ccinfoms17grp2\ui\AdminConsultationsController.class
-com\ccinfoms17grp2\ui\PatientRegistrationController$1.class
 com\ccinfoms17grp2\dao\CrudRepository.class
 com\ccinfoms17grp2\services\QueueService.class
 com\ccinfoms17grp2\dao\impl\AbstractJdbcDao.class

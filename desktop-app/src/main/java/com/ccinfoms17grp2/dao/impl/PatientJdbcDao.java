@@ -67,9 +67,15 @@ public class PatientJdbcDao extends AbstractJdbcDao implements PatientDAO {
                 if (generatedKeys.next()) {
                     int generatedId = generatedKeys.getInt(1);
                     patient.setPatientId(generatedId);
+                    try {
+                        Optional<Patient> refreshed = findById(generatedId);
+                        return refreshed.isPresent() ? refreshed.get() : patient;
+                    } catch (DaoException e) {
+                        return patient;
+                    }
                 }
             }
-            return findById(patient.getPatientId()).orElse(patient);
+            return patient;
         } catch (SQLException ex) {
             throw translateException("Failed to create patient", ex);
         }

@@ -71,9 +71,15 @@ public class UserJdbcDao extends AbstractJdbcDao implements UserDAO {
                 if (generatedKeys.next()) {
                     int generatedId = generatedKeys.getInt(1);
                     user.setUserId(generatedId);
+                    try {
+                        Optional<User> refreshed = findById(generatedId);
+                        return refreshed.orElse(user);
+                    } catch (DaoException e) {
+                        return user;
+                    }
                 }
             }
-            return findById(user.getUserId()).orElse(user);
+            return user;
         } catch (SQLException ex) {
             throw translateException("Failed to create user", ex);
         }

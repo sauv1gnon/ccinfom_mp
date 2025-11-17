@@ -1,24 +1,21 @@
 package com.ccinfoms17grp2.ui;
 
-import com.ccinfoms17grp2.models.Branch;
 import com.ccinfoms17grp2.models.Patient;
 import com.ccinfoms17grp2.services.ServiceRegistry;
 import com.ccinfoms17grp2.services.ValidationException;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
-
-import java.util.List;
 
 public class PatientRegistrationController implements ViewController {
     private SceneNavigator navigator;
     private ServiceRegistry services;
 
     @FXML
-    private TextField fullNameField;
+    private TextField firstNameField;
+
+    @FXML
+    private TextField lastNameField;
 
     @FXML
     private TextField emailField;
@@ -27,31 +24,13 @@ public class PatientRegistrationController implements ViewController {
     private TextField contactField;
 
     @FXML
-    private ChoiceBox<Branch> branchChoice;
+    private TextField passwordField;
 
     @FXML
-    private TextArea notesArea;
+    private TextField confirmPasswordField;
 
     @FXML
     private Label feedbackLabel;
-
-    @FXML
-    private void initialize() {
-        branchChoice.setConverter(new StringConverter<Branch>() {
-            @Override
-            public String toString(Branch branch) {
-                if (branch == null) {
-                    return "";
-                }
-                return branch.getBranchName() + " (" + branch.getBranchId() + ")";
-            }
-
-            @Override
-            public Branch fromString(String string) {
-                return null;
-            }
-        });
-    }
 
     @FXML
     private void handleSubmit() {
@@ -59,29 +38,38 @@ public class PatientRegistrationController implements ViewController {
             feedbackLabel.setText("Services unavailable");
             return;
         }
-        String fullName = fullNameField.getText() == null ? "" : fullNameField.getText().trim();
+        String firstName = firstNameField.getText() == null ? "" : firstNameField.getText().trim();
+        String lastName = lastNameField.getText() == null ? "" : lastNameField.getText().trim();
         String email = emailField.getText() == null ? "" : emailField.getText().trim();
         String contact = contactField.getText() == null ? "" : contactField.getText().trim();
-        Branch branch = branchChoice.getValue();
-        if (fullName.isEmpty() || email.isEmpty() || contact.isEmpty() || branch == null) {
-            feedbackLabel.setText("Complete all required fields and choose a branch");
+        String password = passwordField.getText() == null ? "" : passwordField.getText().trim();
+        String confirmPassword = confirmPasswordField.getText() == null ? "" : confirmPasswordField.getText().trim();
+        
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || contact.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            feedbackLabel.setText("Complete all required fields");
             return;
         }
-        String[] nameParts = splitName(fullName);
+        
+        if (!password.equals(confirmPassword)) {
+            feedbackLabel.setText("Passwords do not match");
+            return;
+        }
+        
         Patient patient = new Patient();
-        patient.setFirstName(nameParts[0]);
-        patient.setLastName(nameParts[1]);
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
         patient.setEmail(email);
         patient.setContactNumber(contact);
+        
         try {
             Patient created = services.getPatientService().createPatient(patient);
-            feedbackLabel.setText("Registered patient #" + created.getPatientId() + " for " + branch.getBranchName());
+            services.getAuthService().registerPatient(email, password, created.getPatientId());
+            feedbackLabel.setText("Registration successful! Patient #" + created.getPatientId() + " created.");
             clearForm();
         } catch (ValidationException ex) {
-            feedbackLabel.setText(ex.getMessage());
+            feedbackLabel.setText("Validation error: " + ex.getMessage());
         } catch (RuntimeException ex) {
-            feedbackLabel.setText("Unable to submit registration");
-            UiUtils.showError("Registration failed", ex.getMessage());
+            feedbackLabel.setText("Registration failed: " + ex.getMessage());
         }
     }
 
@@ -98,52 +86,18 @@ public class PatientRegistrationController implements ViewController {
     @Override
     public void setServices(ServiceRegistry services) {
         this.services = services;
-        loadBranches();
     }
 
     @Override
     public void setSession(SessionContext session) {
     }
 
-    @Override
-    public void onDisplay() {
-        feedbackLabel.setText("");
-        loadBranches();
-    }
-
-    private void loadBranches() {
-        if (services == null || branchChoice == null) {
-            return;
-        }
-        List<Branch> branches = services.getBranchService().listBranches();
-        branchChoice.getItems().setAll(branches);
-        if (!branches.isEmpty() && branchChoice.getValue() == null) {
-            branchChoice.getSelectionModel().selectFirst();
-        }
-    }
-
     private void clearForm() {
-        fullNameField.clear();
+        firstNameField.clear();
+        lastNameField.clear();
         emailField.clear();
         contactField.clear();
-        notesArea.clear();
-        branchChoice.getSelectionModel().clearSelection();
-    }
-
-    private String[] splitName(String fullName) {
-        String normalized = fullName.trim();
-        int index = normalized.lastIndexOf(' ');
-        if (index <= 0) {
-            return new String[] { normalized, normalized };
-        }
-        String first = normalized.substring(0, index).trim();
-        String last = normalized.substring(index + 1).trim();
-        if (first.isEmpty()) {
-            first = last;
-        }
-        if (last.isEmpty()) {
-            last = first;
-        }
-        return new String[] { first, last };
+        passwordField.clear();
+        confirmPasswordField.clear();
     }
 }

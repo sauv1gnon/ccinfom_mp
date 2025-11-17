@@ -32,16 +32,18 @@
             <padding>
                 <Insets top="0.0" right="60.0" bottom="0.0" left="60.0" />
             </padding>
-            <Label text="Full Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="fullNameField" promptText="Enter full name" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="emailField" promptText="name@email.com" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Contact Number" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <TextField fx:id="contactField" promptText="09XX-XXX-XXXX" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Preferred Branch" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <ChoiceBox fx:id="branchChoice" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Notes" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <TextArea fx:id="notesArea" prefRowCount="4" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="First Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="firstNameField" promptText="Enter first name" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="Last Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="lastNameField" promptText="Enter last name" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="emailField" promptText="name@email.com" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Contact Number" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="contactField" promptText="09XX-XXX-XXXX" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="passwordField" promptText="Enter password" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Confirm Password" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <TextField fx:id="confirmPasswordField" promptText="Confirm password" maxWidth="360.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         </GridPane>
     </center>
     <bottom>

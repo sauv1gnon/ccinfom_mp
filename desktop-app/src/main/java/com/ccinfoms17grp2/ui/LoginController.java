@@ -39,7 +39,12 @@ public class LoginController implements ViewController {
 
     @FXML
     private void handleOpenRegistration() {
-        navigator.show(UiView.PATIENT_REGISTRATION);
+        try {
+            navigator.show(UiView.PATIENT_REGISTRATION);
+        } catch (RuntimeException ex) {
+            statusLabel.setText("Unable to open registration");
+            UiUtils.showError("Registration failed", ex.getMessage());
+        }
     }
 
     @Override
