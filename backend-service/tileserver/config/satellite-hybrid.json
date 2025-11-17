@@ -41,7 +41,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": ["==", ["get", "class"], "primary"],
+      "filter": ["==", "class", "primary"],
       "paint": {
         "line-color": "#ffffff",
         "line-width": [
@@ -60,7 +60,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": ["in", ["get", "class"], ["literal", ["secondary", "tertiary"]]],
+      "filter": ["in", "class", "secondary", "tertiary"],
       "paint": {
         "line-color": "#e2e2e2",
         "line-width": [
@@ -79,7 +79,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": ["all", ["!in", ["get", "class"], ["literal", ["primary", "secondary", "tertiary"]]]],
+      "filter": ["!in", "class", "primary", "secondary", "tertiary"],
       "paint": {
         "line-color": "#bfbfbf",
         "line-width": [

@@ -14,8 +14,8 @@ services:
       - "9001:9001"  # Additional port for monitoring (optional)
     image: openrouteservice/openrouteservice:latest
     volumes:
-      - ./ors/ors-config.yml:/home/ors/config/ors-config.yml:ro
-      - ./data/philippines.osm.pbf:/home/ors/files/philippines.osm.pbf:ro
+      - ./ors/ors-config.yml:/home/ors/config/ors-config.yml
+      - ./data/philippines.osm.pbf:/home/ors/files/philippines.osm.pbf
       - ./ors/graphs:/home/ors/graphs
       - ./ors/elevation_cache:/home/ors/elevation_cache
       - ./ors/logs:/home/ors/logs
@@ -54,8 +54,8 @@ services:
     volumes:
       - nominatim-data:/var/lib/postgresql/16/main
       - nominatim-flatnode:/nominatim/flatnode
-      - ./data/philippines.osm.pbf:/nominatim/input/philippines.osm.pbf:ro
-      - ./nominatim/local.php:/etc/nominatim/local.php:ro
+      - ./data/philippines.osm.pbf:/nominatim/input/philippines.osm.pbf
+      - ./nominatim/local.php:/etc/nominatim/local.php
     shm_size: 1gb
     healthcheck:
       test: ["CMD", "bash", "-c", "curl -fsS http://localhost:8083/status.php || exit 1"]

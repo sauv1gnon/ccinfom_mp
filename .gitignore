@@ -1,3 +1,5 @@
 backend-service/data/philippines.mbtiles
 backend-service/data/philippines.osm.pbf
 *.class
+backend-service/ors/graphs/
+backend-service/ors/logs/
