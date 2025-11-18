@@ -93,6 +93,7 @@ public class AppointmentBookingDialogController {
     private void setupMap() {
         webEngine = mapView.getEngine();
         String mapHtml = generateMapHtml();
+        System.out.println("[AppointmentBooking] Loading map HTML into WebEngine");
         webEngine.loadContent(mapHtml);
     }
 
@@ -120,7 +121,11 @@ public class AppointmentBookingDialogController {
             return;
         }
 
-        if (!services.getGeocodingService().isServiceAvailable()) {
+        System.out.println("[AppointmentBooking] Checking geocoding service availability...");
+        boolean serviceAvailable = services.getGeocodingService().isServiceAvailable();
+        System.out.println("[AppointmentBooking] Geocoding service available: " + serviceAvailable);
+        
+        if (!serviceAvailable) {
             locationResultLabel.setText("✗ Geocoding service unavailable");
             updateStatus("Backend services not running. Using manual coordinates.");
             showManualLocationDialog();
@@ -134,6 +139,7 @@ public class AppointmentBookingDialogController {
             try {
                 return services.getGeocodingService().geocodeAddress(location);
             } catch (Exception e) {
+                System.out.println("[AppointmentBooking] Geocoding error: " + e.getMessage());
                 return null;
             }
         }).thenAccept(result -> Platform.runLater(() -> {
@@ -334,16 +340,18 @@ public class AppointmentBookingDialogController {
         return "<!DOCTYPE html>" +
                 "<html><head>" +
                 "<meta charset='utf-8'>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
                 "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
                 "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
-                "<style>body,html,#map{margin:0;padding:0;height:100%;width:100%;}</style>" +
+                "<style>* {margin:0;padding:0;box-sizing:border-box;} html,body,#map{height:100%;width:100%;}</style>" +
                 "</head><body>" +
                 "<div id='map'></div>" +
                 "<script>" +
-                "var map = L.map('map').setView([14.5995, 120.9842], 11);" +
+                "var map = L.map('map', {zoomControl: true, attributionControl: true}).setView([14.5995, 120.9842], 11);" +
                 "L.tileLayer('http://localhost:8082/styles/basic/{z}/{x}/{y}.png', {" +
-                "  maxZoom: 18" +
+                "  minZoom: 3, maxZoom: 16, tms: false, crossOrigin: true" +
                 "}).addTo(map);" +
+                "map.invalidateSize();" +
                 "</script>" +
                 "</body></html>";
     }
@@ -354,7 +362,8 @@ public class AppointmentBookingDialogController {
             "window.patientMarker = L.marker([%f, %f], {" +
             "  icon: L.icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', iconSize: [25, 41], iconAnchor: [12, 41]})" +
             "}).addTo(map).bindPopup('Your Location');" +
-            "map.setView([%f, %f], 13);",
+            "map.setView([%f, %f], 13);" +
+            "map.invalidateSize();",
             patientLat, patientLon, patientLat, patientLon
         );
         webEngine.executeScript(script);
@@ -378,6 +387,7 @@ public class AppointmentBookingDialogController {
             ));
         }
 
+        script.append("map.invalidateSize();");
         webEngine.executeScript(script.toString());
     }
 }

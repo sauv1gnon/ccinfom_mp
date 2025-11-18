@@ -55,16 +55,15 @@ public class PatientRegistrationController implements ViewController {
             return;
         }
         
-        Patient patient = new Patient();
-        patient.setFirstName(firstName);
-        patient.setLastName(lastName);
-        patient.setEmail(email);
-        patient.setContactNumber(contact);
-        
         try {
-            Patient created = services.getPatientService().createPatient(patient);
+            Patient newPatient = new Patient();
+            newPatient.setFirstName(firstName);
+            newPatient.setLastName(lastName);
+            newPatient.setEmail(email);
+            newPatient.setContactNumber(contact);
+            Patient created = services.getPatientService().createPatient(newPatient);
             services.getAuthService().registerPatient(email, password, created.getPatientId());
-            feedbackLabel.setText("Registration successful! Patient #" + created.getPatientId() + " created.");
+            feedbackLabel.setText("Registration successful!");
             clearForm();
         } catch (ValidationException ex) {
             feedbackLabel.setText("Validation error: " + ex.getMessage());

@@ -198,13 +198,17 @@ public class AuthService {
             if (existingUser.isPresent()) {
                 throw new AuthenticationException("Email address is already registered");
             }
+        } catch (DaoException ex) {
+            throw new AuthenticationException("Database error during email check", ex);
+        }
 
+        try {
             Optional<User> existingPersonUser = userDAO.findByPersonId(personId);
             if (existingPersonUser.isPresent()) {
                 throw new AuthenticationException("This person already has a user account");
             }
         } catch (DaoException ex) {
-            throw new AuthenticationException("Database error during registration", ex);
+            throw new AuthenticationException("Database error during person ID check", ex);
         }
 
         User user = new User();

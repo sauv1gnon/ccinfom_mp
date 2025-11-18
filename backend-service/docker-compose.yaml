@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     ports:
       - "${ORS_HTTP_PORT:-8080}:8080"  # ORS API on dedicated host port
-      - "9001:9001"  # Additional port for monitoring (optional)
+      # - "9001:9001"  # Additional port for monitoring (optional)
     image: openrouteservice/openrouteservice:latest
     volumes:
       - ./ors/ors-config.yml:/home/ors/config/ors-config.yml

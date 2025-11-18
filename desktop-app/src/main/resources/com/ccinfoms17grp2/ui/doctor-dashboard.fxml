@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ccinfoms17grp2.ui.DoctorDashboardController" prefWidth="960.0" prefHeight="640.0">
     <top>
         <VBox spacing="6.0">

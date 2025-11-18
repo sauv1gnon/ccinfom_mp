@@ -66,7 +66,12 @@ public class UserJdbcDao extends AbstractJdbcDao implements UserDAO {
             statement.setString(3, user.getUserType().name());
             statement.setInt(4, user.getPersonId());
             statement.setBoolean(5, user.isActive());
-            statement.executeUpdate();
+            
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+            
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     int generatedId = generatedKeys.getInt(1);
@@ -77,9 +82,10 @@ public class UserJdbcDao extends AbstractJdbcDao implements UserDAO {
                     } catch (DaoException e) {
                         return user;
                     }
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
-            return user;
         } catch (SQLException ex) {
             throw translateException("Failed to create user", ex);
         }

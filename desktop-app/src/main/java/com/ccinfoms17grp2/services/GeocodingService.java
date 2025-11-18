@@ -73,31 +73,37 @@ public class GeocodingService {
         conn.setConnectTimeout(TIMEOUT_MS);
         conn.setReadTimeout(TIMEOUT_MS);
         conn.setRequestProperty("User-Agent", "CCInfoMSHealthcareApp/1.0");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Connection", "close");
 
-        int responseCode = conn.getResponseCode();
-        if (responseCode != 200) {
-            throw new Exception("Geocoding service returned status code: " + responseCode);
+        try {
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                throw new Exception("Geocoding service returned status code: " + responseCode);
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JsonArray results = JsonParser.parseString(response.toString()).getAsJsonArray();
+            if (results.size() == 0) {
+                return null; // No results found
+            }
+
+            JsonObject firstResult = results.get(0).getAsJsonObject();
+            double lat = firstResult.get("lat").getAsDouble();
+            double lon = firstResult.get("lon").getAsDouble();
+            String displayName = firstResult.get("display_name").getAsString();
+
+            return new GeocodingResult(lat, lon, displayName);
+        } finally {
+            conn.disconnect();
         }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
-        reader.close();
-
-        JsonArray results = JsonParser.parseString(response.toString()).getAsJsonArray();
-        if (results.size() == 0) {
-            return null; // No results found
-        }
-
-        JsonObject firstResult = results.get(0).getAsJsonObject();
-        double lat = firstResult.get("lat").getAsDouble();
-        double lon = firstResult.get("lon").getAsDouble();
-        String displayName = firstResult.get("display_name").getAsString();
-
-        return new GeocodingResult(lat, lon, displayName);
     }
 
     /**
@@ -106,17 +112,28 @@ public class GeocodingService {
      * @return true if service is available, false otherwise
      */
     public boolean isServiceAvailable() {
+        HttpURLConnection conn = null;
         try {
-            URL url = new URL(NOMINATIM_BASE_URL + "/status");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            URL url = new URL(NOMINATIM_BASE_URL + "/status.php");
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(2000);
-            conn.setReadTimeout(2000);
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            conn.setRequestProperty("User-Agent", "CCInfoMSHealthcareApp/1.0");
+            conn.setRequestProperty("Accept", "*/*");
+            conn.setRequestProperty("Connection", "close");
             
             int responseCode = conn.getResponseCode();
-            return responseCode == 200;
+            boolean available = responseCode == 200;
+            System.out.println("[GeocodingService] Nominatim availability check: URL=" + url + ", responseCode=" + responseCode + ", available=" + available);
+            return available;
         } catch (Exception e) {
+            System.out.println("[GeocodingService] Nominatim availability check failed: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             return false;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
     }
 }

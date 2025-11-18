@@ -1,16 +1,13 @@
 USE primary_db;
 
-CREATE TABLE IF NOT EXISTS user_roles (
-    role_id INT AUTO_INCREMENT PRIMARY KEY,
-    role_name VARCHAR(50) UNIQUE NOT NULL,
-    description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+SET FOREIGN_KEY_CHECKS=0;
 
-INSERT IGNORE INTO user_roles (role_name, description) VALUES 
-('PATIENT', 'Patient role for booking appointments and managing records'),
-('DOCTOR', 'Doctor role for managing appointments and consultations'),
-('ADMIN', 'Administrator role with full system access');
+DROP TABLE IF EXISTS password_reset_tokens;
+DROP TABLE IF EXISTS login_attempts;
+DROP TABLE IF EXISTS user_sessions;
+DROP TABLE IF EXISTS users;
+
+SET FOREIGN_KEY_CHECKS=1;
 
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,7 +25,6 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_users_active (is_active)
 );
 
--- User sessions for tracking active sessions
 CREATE TABLE IF NOT EXISTS user_sessions (
     session_id VARCHAR(128) PRIMARY KEY,
     user_id INT NOT NULL,
@@ -44,7 +40,6 @@ CREATE TABLE IF NOT EXISTS user_sessions (
     INDEX idx_sessions_expires (expires_at)
 );
 
--- Password reset tokens
 CREATE TABLE IF NOT EXISTS password_reset_tokens (
     token_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -59,7 +54,6 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
     INDEX idx_reset_tokens_expires (expires_at)
 );
 
--- Login attempt tracking for security
 CREATE TABLE IF NOT EXISTS login_attempts (
     attempt_id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255),

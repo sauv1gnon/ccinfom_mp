@@ -1,7 +1,7 @@
 {
   "version": 8,
   "name": "satellite-hybrid",
-  "glyphs": "fonts/{fontstack}/{range}.pbf",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "sources": {
     "openmaptiles": {
       "type": "vector",
