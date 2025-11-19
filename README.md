@@ -1,6 +1,13 @@
 # Project Overview
 This is a project powered by Maven(JavaFX+XML) and MySQL80.
 
+In Partial Fulfillment
+Of the Requirements for CCINFOM – S17
+Group 2
+- Brent Prose B. Rebollos
+- Jannce Renzen K. Cortes
+- Marian B. Recio
+
 ## Frontend Implementation guidelines
 The frontend of this project is implemented using JavaFX and XML. The user interface is designed with FXML files, which define the layout and components of the application. JavaFX provides a rich set of UI controls and features to create a responsive and interactive user experience.
 
@@ -41,6 +48,16 @@ Login -> Homepage
 **Doctor Portal UI/UX Design:**
 - The doctor portal provides functionalities for managing patient appointments, viewing medical histories, and updating treatment plans.
 - The design prioritizes efficiency, clarity, and quick access to critical information for healthcare professionals.
+
+```
+Login -> Homepage
+            -> Appointments List
+                -> View Appointment Details
+                    -> Start Consultation
+            -> Patient Records
+                -> View Patient Details
+                    -> Update Treatment Plan
+```
 
 **Admin Portal UI/UX Design:**
 - The admin portal provides functionalities for managing patient records, appointments, and system settings.

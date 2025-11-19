@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DoctorDashboardController implements ViewController {
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy h:mm a");
@@ -142,26 +141,18 @@ public class DoctorDashboardController implements ViewController {
             List<Consultation> consultations = services.getConsultationService()
                     .getConsultationsByDoctorId(session.getPersonIdOrThrow(User.UserType.DOCTOR));
             
-            // Filter consultations where current datetime does not exceed end_time
-            LocalDateTime now = LocalDateTime.now();
-            List<Consultation> validConsultations = consultations.stream()
-                    .filter(c -> c.getEndTime() == null || !now.isAfter(c.getEndTime()))
-                    .collect(Collectors.toList());
-            
             consultationCardsContainer.getChildren().clear();
-            if (validConsultations.isEmpty()) {
-                // Don't show error, just show empty state
+            if (consultations.isEmpty()) {
                 Label emptyLabel = new Label("No consultations recorded yet");
                 emptyLabel.setStyle("-fx-font-family: 'Inter'; -fx-font-size: 16; -fx-text-fill: #757575;");
                 consultationCardsContainer.getChildren().add(emptyLabel);
             } else {
-                for (Consultation consultation : validConsultations) {
+                for (Consultation consultation : consultations) {
                     VBox card = createConsultationCard(consultation);
                     consultationCardsContainer.getChildren().add(card);
                 }
             }
         } catch (RuntimeException ex) {
-            // Don't show error dialog for empty consultations
             consultationCardsContainer.getChildren().clear();
             Label emptyLabel = new Label("No consultations recorded yet");
             emptyLabel.setStyle("-fx-font-family: 'Inter'; -fx-font-size: 16; -fx-text-fill: #757575;");

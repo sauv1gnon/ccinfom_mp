@@ -61,6 +61,7 @@ public class PatientHomeController implements ViewController {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setGraphic(null);
+                    setStyle("");
                 } else {
                     setGraphic(createConsultationCard(item));
                 }
@@ -180,6 +181,7 @@ public class PatientHomeController implements ViewController {
             welcomeLabel.setText("Welcome, patient #" + patientId);
         }
         refreshAppointments();
+        refreshConsultations();
     }
 
     private void refreshAppointments() {
