@@ -9,15 +9,11 @@ public enum DoctorAvailabilityStatus {
         if (value == null) {
             return AVAILABLE;
         }
-        final String normalized = value.trim().toUpperCase();
+        final String normalized = value.trim().toLowerCase();
         switch (normalized) {
-            case "AVAILABLE":
+            case "available":
                 return AVAILABLE;
-            case "BUSY":
-                return BUSY;
-            case "OFF DUTY":
-            case "OFF_DUTY":
-            case "OFFDUTY":
+            case "unavailable":
                 return OFF_DUTY;
             default:
                 throw new IllegalArgumentException("Unknown availability status: " + value);
@@ -27,11 +23,11 @@ public enum DoctorAvailabilityStatus {
     public String toDatabaseValue() {
         switch (this) {
             case AVAILABLE:
-                return "Available";
+                return "available";
             case BUSY:
-                return "Busy";
+                return "unavailable";
             case OFF_DUTY:
-                return "Off Duty";
+                return "unavailable";
             default:
                 throw new IllegalStateException("Unexpected value: " + this);
         }

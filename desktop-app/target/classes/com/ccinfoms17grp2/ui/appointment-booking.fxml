@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
+<?import com.gluonhq.maps.MapView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ccinfoms17grp2.ui.AppointmentBookingDialogController"
-            prefWidth="1100.0" prefHeight="700.0">
+            prefWidth="1100.0" prefHeight="700.0" minWidth="1100.0" maxWidth="1100.0" minHeight="700.0" maxHeight="700.0">
     
     <top>
         <VBox spacing="8.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 0 0 1 0;">
@@ -78,7 +78,7 @@
                     <Insets top="20.0" right="20.0" bottom="20.0" left="15.0" />
                 </padding>
                 <Label text="Map View" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-                <WebView fx:id="mapView" prefHeight="500.0" VBox.vgrow="ALWAYS" />
+                <MapView fx:id="mapView" prefWidth="512.0" prefHeight="512.0" />
             </VBox>
         </SplitPane>
     </center>

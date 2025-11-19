@@ -1,3 +1,4 @@
+com\ccinfoms17grp2\ui\AdminBranchFormController$BranchMarkerLayer.class
 com\ccinfoms17grp2\models\User.class
 com\ccinfoms17grp2\ui\AdminDoctorsController$2.class
 com\ccinfoms17grp2\services\ServiceRegistry.class
@@ -28,7 +29,6 @@ com\ccinfoms17grp2\dao\impl\BranchJdbcDao.class
 com\ccinfoms17grp2\models\BranchWithDoctors$DoctorAvailabilityInfo.class
 com\ccinfoms17grp2\models\Queue.class
 com\ccinfoms17grp2\ui\UiView.class
-com\ccinfoms17grp2\ui\DoctorDashboardController$2.class
 com\ccinfoms17grp2\dao\impl\SpecializationJdbcDao.class
 com\ccinfoms17grp2\dao\AppointmentDAO.class
 com\ccinfoms17grp2\models\Doctor.class
@@ -45,7 +45,6 @@ com\ccinfoms17grp2\dao\DoctorDAO.class
 com\ccinfoms17grp2\services\BranchService.class
 com\ccinfoms17grp2\models\AppointmentStatus.class
 com\ccinfoms17grp2\models\QueueStatus.class
-com\ccinfoms17grp2\ui\DoctorDashboardController$1.class
 com\ccinfoms17grp2\dao\impl\DoctorJdbcDao.class
 com\ccinfoms17grp2\ui\AdminUsersController$2.class
 com\ccinfoms17grp2\ui\AdminSpecializationsController.class
@@ -61,6 +60,7 @@ com\ccinfoms17grp2\ui\AdminPatientsController$1.class
 com\ccinfoms17grp2\ui\UiUtils.class
 com\ccinfoms17grp2\ui\LoginController.class
 com\ccinfoms17grp2\services\GeocodingService$GeocodingResult.class
+com\ccinfoms17grp2\ui\BranchMapLayer.class
 com\ccinfoms17grp2\dao\impl\QueueJdbcDao.class
 com\ccinfoms17grp2\models\DoctorAvailabilityStatus.class
 com\ccinfoms17grp2\ui\PatientRegistrationController.class
@@ -80,6 +80,7 @@ com\ccinfoms17grp2\services\BranchRecommendationService$BranchRecommendation.cla
 com\ccinfoms17grp2\ui\AppointmentBookingDialogController$1.class
 com\ccinfoms17grp2\ui\AdminAppointmentsController$2.class
 com\ccinfoms17grp2\dao\UserDAO.class
+com\ccinfoms17grp2\ui\AdminBranchFormController.class
 com\ccinfoms17grp2\ui\AppointmentBookingDialogController.class
 com\ccinfoms17grp2\dao\PatientDAO.class
 com\ccinfoms17grp2\dao\impl\PatientJdbcDao.class

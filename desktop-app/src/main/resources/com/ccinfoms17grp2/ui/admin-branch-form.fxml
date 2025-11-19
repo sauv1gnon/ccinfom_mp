@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.gluonhq.maps.MapView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ccinfoms17grp2.ui.AdminBranchFormController"
+            prefWidth="900.0" prefHeight="650.0" minWidth="900.0" maxWidth="900.0" minHeight="650.0" maxHeight="650.0">
+    
+    <top>
+        <VBox spacing="8.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 0 0 1 0;">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="15.0" left="20.0" />
+            </padding>
+            <Label fx:id="titleLabel" text="Branch Form" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+            <Label fx:id="statusLabel" text="" style="-fx-text-fill: #6c757d;" />
+        </VBox>
+    </top>
+    
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL">
+            <VBox spacing="15.0">
+                <padding>
+                    <Insets top="20.0" right="15.0" bottom="20.0" left="20.0" />
+                </padding>
+                
+                <VBox spacing="8.0">
+                    <Label text="Branch Name" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <TextField fx:id="nameField" promptText="Enter branch name" />
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Contact Number" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <TextField fx:id="contactField" promptText="Enter contact number" />
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Capacity" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <TextField fx:id="capacityField" promptText="Enter capacity" />
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Address Search" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <HBox spacing="8.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="addressSearchField" promptText="Search for address" 
+                                   HBox.hgrow="ALWAYS" />
+                        <Button text="Search" onAction="#handleSearchAddress" 
+                                style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+                    </HBox>
+                    <Label fx:id="searchResultLabel" text="" wrapText="true" 
+                           style="-fx-font-size: 11px; -fx-text-fill: #28a745;" />
+                </VBox>
+                
+                <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+                    <Label text="Address Suggestions" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                                style="-fx-background-color: white; -fx-border-color: #dee2e6;" prefHeight="150.0">
+                        <VBox fx:id="suggestionsContainer" spacing="4.0">
+                            <padding>
+                                <Insets top="8.0" right="8.0" bottom="8.0" left="8.0" />
+                            </padding>
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+                
+                <VBox spacing="8.0">
+                    <Label text="Selected Address" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <TextArea fx:id="addressField" promptText="Selected address will appear here" 
+                              wrapText="true" prefRowCount="2" editable="false" />
+                </VBox>
+                
+                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                        <Label text="Latitude" style="-fx-font-size: 11px; -fx-font-weight: bold;" />
+                        <TextField fx:id="latField" promptText="Latitude" />
+                    </VBox>
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                        <Label text="Longitude" style="-fx-font-size: 11px; -fx-font-weight: bold;" />
+                        <TextField fx:id="lonField" promptText="Longitude" />
+                    </VBox>
+                    <Button text="Manual" onAction="#handleManualLocation" 
+                            style="-fx-font-size: 11px; -fx-padding: 3 10 3 10;" 
+                            alignment="BOTTOM_LEFT" />
+                </HBox>
+            </VBox>
+            
+            <VBox>
+                <padding>
+                    <Insets top="20.0" right="20.0" bottom="20.0" left="15.0" />
+                </padding>
+                <Label text="Map Preview" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+                <MapView fx:id="mapView" prefWidth="400.0" prefHeight="512.0" />
+            </VBox>
+        </SplitPane>
+    </center>
+    
+    <bottom>
+        <HBox spacing="10.0" alignment="CENTER_RIGHT" 
+              style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="15.0" right="20.0" bottom="15.0" left="20.0" />
+            </padding>
+            <Button text="Cancel" onAction="#handleCancel" prefWidth="100.0" />
+            <Button fx:id="saveButton" text="Save" onAction="#handleSave" prefWidth="100.0" 
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </HBox>
+    </bottom>
+</BorderPane>

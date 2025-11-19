@@ -4,12 +4,16 @@ import com.ccinfoms17grp2.models.Appointment;
 import com.ccinfoms17grp2.models.Consultation;
 import com.ccinfoms17grp2.models.Patient;
 import com.ccinfoms17grp2.models.User;
+import com.ccinfoms17grp2.models.Doctor;
+import com.ccinfoms17grp2.models.Branch;
+import com.ccinfoms17grp2.models.AppointmentStatus;
 import com.ccinfoms17grp2.services.ServiceRegistry;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,25 +40,29 @@ public class PatientHomeController implements ViewController {
 
     @FXML
     private void initialize() {
+        // Setup appointments list with custom card rendering
         appointmentsList.setCellFactory(list -> new ListCell<Appointment>() {
             @Override
             protected void updateItem(Appointment item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null);
+                    setGraphic(null);
+                    setStyle("");
                 } else {
-                    setText(formatAppointment(item));
+                    setGraphic(createAppointmentCard(item));
                 }
             }
         });
+        
+        // Setup consultations list with custom card rendering
         consultationsList.setCellFactory(list -> new ListCell<Consultation>() {
             @Override
             protected void updateItem(Consultation item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(formatConsultation(item));
+                    setGraphic(createConsultationCard(item));
                 }
             }
         });
@@ -103,15 +111,25 @@ public class PatientHomeController implements ViewController {
             updateStatus("Select an appointment to cancel");
             return;
         }
+
+        if (selected.getStatus() != AppointmentStatus.SCHEDULED) {
+            updateStatus("Only scheduled appointments can be cancelled");
+            return;
+        }
+
         if (!UiUtils.showConfirmation("Cancel Appointment", "Cancel appointment #" + selected.getAppointmentId() + "?")) {
             return;
         }
         try {
-            services.getAppointmentService().cancelAppointment(selected.getAppointmentId());
-            updateStatus("Appointment #" + selected.getAppointmentId() + " canceled");
-            refreshAppointments();
+            boolean success = services.getAppointmentService().cancelAppointment(selected.getAppointmentId());
+            if (success) {
+                updateStatus("Appointment #" + selected.getAppointmentId() + " canceled");
+                refreshAppointments();
+            } else {
+                updateStatus("Failed to cancel appointment - please try again");
+            }
         } catch (RuntimeException ex) {
-            updateStatus("Unable to cancel appointment");
+            updateStatus("Unable to cancel appointment: " + ex.getMessage());
             UiUtils.showError("Cancel Appointment", ex.getMessage());
         }
     }
@@ -221,8 +239,107 @@ public class PatientHomeController implements ViewController {
         return "#" + appointment.getAppointmentId() + " " + time + " (" + appointment.getStatus() + ")";
     }
 
-    private String formatConsultation(Consultation consultation) {
-        String time = consultation.getStartTime() == null ? "" : consultation.getStartTime().format(DISPLAY_FORMAT);
-        return "Consultation #" + consultation.getConsultationId() + " for appointment #" + consultation.getAppointmentId() + " " + time;
+    private VBox createAppointmentCard(Appointment appointment) {
+        VBox card = new VBox(24.0);
+        card.setStyle("-fx-border-color: #d9d9d9; -fx-border-radius: 8; -fx-background-color: #ffffff; -fx-padding: 24;");
+        card.setPrefWidth(450);
+        card.setPrefHeight(199);
+
+        // Header with Status
+        VBox headerBox = new VBox(4.0);
+        
+        Label appointmentStatusLabel = new Label(appointment.getStatus().toString());
+        appointmentStatusLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 600; -fx-text-fill: #1e1e1e;");
+
+        // Branch info
+        Label branchLabel = new Label();
+        Label addressLabel = new Label();
+        try {
+            Optional<Branch> branchOpt = services.getBranchService().getBranchById(appointment.getBranchId());
+            if (branchOpt.isPresent()) {
+                Branch branch = branchOpt.get();
+                branchLabel.setText(branch.getBranchName());
+                addressLabel.setText(branch.getAddress());
+            }
+        } catch (Exception e) {
+            branchLabel.setText("Branch");
+            addressLabel.setText("");
+        }
+        branchLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #1e1e1e;");
+        addressLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #1e1e1e; -fx-wrap-text: true;");
+        addressLabel.setWrapText(true);
+
+        headerBox.getChildren().addAll(appointmentStatusLabel, branchLabel, addressLabel);
+
+        // Doctor and DateTime info
+        VBox infoBox = new VBox(2.0);
+        
+        Label doctorLabel = new Label();
+        try {
+            Optional<Doctor> doctorOpt = services.getDoctorService().getDoctorById(appointment.getDoctorId());
+            if (doctorOpt.isPresent()) {
+                Doctor doctor = doctorOpt.get();
+                doctorLabel.setText("Dr. " + doctor.getFirstName() + " " + doctor.getLastName());
+            }
+        } catch (Exception e) {
+            doctorLabel.setText("Dr. Unknown");
+        }
+        doctorLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #757575;");
+
+        Label dateTimeLabel = new Label();
+        if (appointment.getAppointmentDateTime() != null) {
+            dateTimeLabel.setText(appointment.getAppointmentDateTime().format(DISPLAY_FORMAT));
+        }
+        dateTimeLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #b3b3b3;");
+
+        infoBox.getChildren().addAll(doctorLabel, dateTimeLabel);
+
+        card.getChildren().addAll(headerBox, infoBox);
+        return card;
+    }
+
+    private VBox createConsultationCard(Consultation consultation) {
+        VBox card = new VBox(24.0);
+        card.setStyle("-fx-border-color: #d9d9d9; -fx-border-radius: 8; -fx-background-color: #ffffff; -fx-padding: 24;");
+        card.setPrefWidth(630);
+        card.setPrefHeight(160);
+
+        // Time range
+        VBox headerBox = new VBox(4.0);
+        
+        Label timeRangeLabel = new Label();
+        if (consultation.getStartTime() != null && consultation.getEndTime() != null) {
+            String startStr = consultation.getStartTime().format(DISPLAY_FORMAT);
+            String endStr = consultation.getEndTime().format(DISPLAY_FORMAT);
+            timeRangeLabel.setText(startStr + " to " + endStr);
+        } else if (consultation.getStartTime() != null) {
+            timeRangeLabel.setText(consultation.getStartTime().format(DISPLAY_FORMAT));
+        }
+        timeRangeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 600; -fx-text-fill: #1e1e1e;");
+
+        // Diagnosis
+        Label diagnosisLabel = new Label(consultation.getDiagnosis() != null ? consultation.getDiagnosis() : "");
+        diagnosisLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #1e1e1e;");
+
+        headerBox.getChildren().addAll(timeRangeLabel, diagnosisLabel);
+
+        // Treatment plan and follow-up
+        VBox infoBox = new VBox(2.0);
+        
+        Label treatmentLabel = new Label(consultation.getTreatmentPlan() != null ? consultation.getTreatmentPlan() : "");
+        treatmentLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #757575;");
+
+        Label followUpLabel = new Label();
+        if (consultation.getFollowUpDate() != null) {
+            followUpLabel.setText("Follow-up on " + consultation.getFollowUpDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm")));
+        } else {
+            followUpLabel.setText("No follow-up scheduled");
+        }
+        followUpLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #b3b3b3;");
+
+        infoBox.getChildren().addAll(treatmentLabel, followUpLabel);
+
+        card.getChildren().addAll(headerBox, infoBox);
+        return card;
     }
 }

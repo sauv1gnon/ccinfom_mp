@@ -42,27 +42,24 @@ services:
     image: mediagis/nominatim:5.1
     restart: unless-stopped
     ports:
-      - "${NOMINATIM_HTTP_PORT:-8081}:8083"
+      - "${NOMINATIM_HTTP_PORT:-8081}:8080"
     environment:
       NOMINATIM_PASSWORD: ${NOMINATIM_PASSWORD:-change_me}
       IMPORT_PBF: /nominatim/input/philippines.osm.pbf
       PBF_PATH: /nominatim/input/philippines.osm.pbf
-      REPLICATION_URL: ${NOMINATIM_REPLICATION_URL:-https://download.geofabrik.de/asia/philippines-updates/}
-      NOMINATIM_THREADS: ${NOMINATIM_THREADS:-8}
-      NOMINATIM_IMPORT_WIKIPEDIA: ${NOMINATIM_IMPORT_WIKIPEDIA:-false}
-      NOMINATIM_FLATNODE_FILE: /nominatim/flatnode/flatnode.file
+      NOMINATIM_THREADS: ${NOMINATIM_THREADS:-4}
+      NOMINATIM_IMPORT_WIKIPEDIA: false
     volumes:
       - nominatim-data:/var/lib/postgresql/16/main
-      - nominatim-flatnode:/nominatim/flatnode
       - ./data/philippines.osm.pbf:/nominatim/input/philippines.osm.pbf
       - ./nominatim/local.php:/etc/nominatim/local.php
-    shm_size: 1gb
+    shm_size: 512mb
     healthcheck:
-      test: ["CMD", "bash", "-c", "curl -fsS http://localhost:8083/status.php || exit 1"]
+      test: ["CMD", "bash", "-c", "curl -fsS http://localhost:8080/status.php || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 300s
+      retries: 3
+      start_period: 120s
     networks:
       - geo_services
   
@@ -77,8 +74,7 @@ services:
       - "./tileserver/config:/etc/tileserver:ro"
     command: ["-p", "80", "-c", "/etc/tileserver/config.json"]
     environment:
-      TILESERVER_CACHE_SIZE: ${TILESERVER_CACHE_SIZE:-512MB}
-      TILESERVER_MAX_THREADS: ${TILESERVER_MAX_THREADS:-8}
+      TILESERVER_CACHE_SIZE: ${TILESERVER_CACHE_SIZE:-256MB}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
       interval: 30s

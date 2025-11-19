@@ -256,3 +256,544 @@
     -fx-font-weight: 600;
     font-weight: 600;
 }
+
+/* ===== NEW LOGIN PAGE STYLES ===== */
+
+.login-root {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+}
+
+.login-widget {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+    -fx-min-width: 1100px;
+    min-width: 1100px;
+    -fx-min-height: 1019px;
+    min-height: 1019px;
+}
+
+.login-title {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 48px;
+    font-size: 48px;
+    -fx-font-weight: 700;
+    font-weight: 700;
+    -fx-text-fill: #000000;
+    color: #000000;
+    -fx-line-spacing: 1.2;
+}
+
+/* Form Field Container */
+.form-field {
+    -fx-spacing: 4px;
+    -fx-max-width: 734px;
+    max-width: 734px;
+}
+
+.field-label {
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-size: 12px;
+    font-size: 12px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #49454f;
+    color: #49454f;
+    -fx-padding: 4px 0 0 16px;
+    padding: 4px 0 0 16px;
+}
+
+.input-container {
+    -fx-background-color: #e6e0e9;
+    background-color: #e6e0e9;
+    -fx-border-radius: 4px;
+    border-radius: 4px;
+    -fx-padding: 4px;
+    padding: 4px;
+    -fx-spacing: 4px;
+    -fx-min-height: 56px;
+    min-height: 56px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.input-field {
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #1d1b20;
+    color: #1d1b20;
+    -fx-padding: 12px 16px;
+    padding: 12px 16px;
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-width: 0;
+    border-width: 0;
+    -fx-prompt-text-fill: #49454f;
+}
+
+.input-field:focused {
+    -fx-text-fill: #1d1b20;
+    color: #1d1b20;
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-width: 0;
+    border-width: 0;
+}
+
+/* Icon Button for Input Fields */
+.icon-button {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-width: 0;
+    border-width: 0;
+    -fx-padding: 0;
+    padding: 0;
+    -fx-min-width: 48px;
+    min-width: 48px;
+    -fx-min-height: 48px;
+    min-height: 48px;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.08);
+    -fx-background-radius: 100px;
+}
+
+.icon-button:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+.field-icon {
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-text-fill: #49454f;
+    color: #49454f;
+}
+
+.supporting-text {
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-size: 12px;
+    font-size: 12px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #49454f;
+    color: #49454f;
+    -fx-padding: 4px 0 0 16px;
+    padding: 4px 0 0 16px;
+}
+
+/* Login Buttons */
+.btn-dark {
+    -fx-background-color: #2c2c2c;
+    background-color: #2c2c2c;
+    -fx-text-fill: #f5f5f5;
+    color: #f5f5f5;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-width: 1px;
+    border-width: 1px;
+    -fx-border-color: #2c2c2c;
+    border-color: #2c2c2c;
+    -fx-border-radius: 8px;
+    border-radius: 8px;
+    -fx-padding: 12px 12px;
+    padding: 12px 12px;
+    -fx-cursor: hand;
+}
+
+.btn-dark:hover {
+    -fx-background-color: #1a1a1a;
+    background-color: #1a1a1a;
+    -fx-border-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.btn-dark:pressed {
+    -fx-background-color: #0d0d0d;
+    background-color: #0d0d0d;
+    -fx-border-color: #0d0d0d;
+    border-color: #0d0d0d;
+}
+
+/* Secondary Button (Register) */
+.btn-secondary {
+    -fx-background-color: #e3e3e3;
+    background-color: #e3e3e3;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-width: 1px;
+    border-width: 1px;
+    -fx-border-color: #767676;
+    border-color: #767676;
+    -fx-border-radius: 8px;
+    border-radius: 8px;
+    -fx-padding: 12px 12px;
+    padding: 12px 12px;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #d0d0d0;
+    background-color: #d0d0d0;
+}
+
+.btn-secondary:pressed {
+    -fx-background-color: #bfbfbf;
+    background-color: #bfbfbf;
+}
+
+/* Status Label */
+.status-label {
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #49454f;
+    color: #49454f;
+    -fx-padding: 24px 0 0 0;
+    padding: 24px 0 0 0;
+}
+
+.status-label.error {
+    -fx-text-fill: #d32f2f;
+    color: #d32f2f;
+}
+
+.status-label.success {
+    -fx-text-fill: #388e3c;
+    color: #388e3c;
+}
+
+/* ===== DOCTOR DASHBOARD STYLES ===== */
+
+.doctor-dashboard-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d9d9d9;
+    -fx-border-width: 0 0 1 0;
+}
+
+.doctor-dashboard-header-bar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 32;
+    -fx-spacing: 24;
+}
+
+.doctor-dashboard-signout {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16;
+    font-size: 16;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-cursor: hand;
+}
+
+.doctor-dashboard-signout:hover {
+    -fx-text-fill: #0f6ba8;
+    color: #0f6ba8;
+}
+
+.doctor-dashboard-nav-pill {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 8 8;
+    padding: 8 8;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16;
+    font-size: 16;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-radius: 8;
+    border-radius: 8;
+}
+
+.doctor-dashboard-nav-pill:hover {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+}
+
+.doctor-dashboard-nav-pill:pressed {
+    -fx-background-color: #e8e8e8;
+    background-color: #e8e8e8;
+}
+
+.doctor-dashboard-hero {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+    -fx-padding: 20 24 20 24;
+}
+
+.doctor-dashboard-welcome-title {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 48;
+    font-size: 48;
+    -fx-font-weight: 700;
+    font-weight: 700;
+    -fx-text-fill: #000000;
+    color: #000000;
+    -fx-line-spacing: 1.2;
+}
+
+.doctor-dashboard-section {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+}
+
+.doctor-dashboard-section-title {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 24;
+    font-size: 24;
+    -fx-font-weight: 600;
+    font-weight: 600;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-line-spacing: 1.2;
+}
+
+.doctor-dashboard-action-btn {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-text-fill: #0f6ba8;
+    color: #0f6ba8;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 8 12;
+    padding: 8 12;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14;
+    font-size: 14;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-radius: 4;
+    border-radius: 4;
+}
+
+.doctor-dashboard-action-btn:hover {
+    -fx-background-color: #f0f4f8;
+    background-color: #f0f4f8;
+}
+
+.doctor-dashboard-action-btn:pressed {
+    -fx-background-color: #e3ecf1;
+    background-color: #e3ecf1;
+}
+
+/* ===== PATIENT HOME STYLES ===== */
+
+.patient-home {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+.patient-home-header {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-border-color: #d9d9d9;
+    border-color: #d9d9d9;
+    -fx-border-width: 0 0 1 0;
+    border-width: 0 0 1 0;
+}
+
+.header-nav {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-spacing: 24;
+    -fx-alignment: center-left;
+}
+
+.header-signout-link {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16;
+    font-size: 16;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-cursor: hand;
+}
+
+.header-signout-link:hover {
+    -fx-text-fill: #0f6ba8;
+    color: #0f6ba8;
+}
+
+.header-pill-button {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 8 8;
+    padding: 8 8;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16;
+    font-size: 16;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-radius: 8;
+    border-radius: 8;
+}
+
+.header-pill-button:hover {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+}
+
+.header-pill-button:pressed {
+    -fx-background-color: #e8e8e8;
+    background-color: #e8e8e8;
+}
+
+.header-primary-button {
+    -fx-background-color: #2c2c2c;
+    background-color: #2c2c2c;
+    -fx-text-fill: #f5f5f5;
+    color: #f5f5f5;
+    -fx-border-color: #2c2c2c;
+    border-color: #2c2c2c;
+    -fx-padding: 8 8;
+    padding: 8 8;
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 16;
+    font-size: 16;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-border-radius: 8;
+    border-radius: 8;
+    -fx-cursor: hand;
+}
+
+.header-primary-button:hover {
+    -fx-background-color: #1a1a1a;
+    background-color: #1a1a1a;
+    -fx-border-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.header-primary-button:pressed {
+    -fx-background-color: #0d0d0d;
+    background-color: #0d0d0d;
+    -fx-border-color: #0d0d0d;
+    border-color: #0d0d0d;
+}
+
+.hero-section {
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+    -fx-padding: 20 24 20 24;
+}
+
+.welcome-title {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 48;
+    font-size: 48;
+    -fx-font-weight: 700;
+    font-weight: 700;
+    -fx-text-fill: #000000;
+    color: #000000;
+    -fx-line-spacing: 1.2;
+}
+
+.main-content {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-spacing: 15;
+    -fx-padding: 0 24 0 24;
+}
+
+.content-section {
+    -fx-background-color: #ffffff;
+    background-color: #ffffff;
+    -fx-spacing: 12;
+    -fx-padding: 0;
+}
+
+.section-title {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 24;
+    font-size: 24;
+    -fx-font-weight: 600;
+    font-weight: 600;
+    -fx-text-fill: #1e1e1e;
+    color: #1e1e1e;
+    -fx-line-spacing: 1.2;
+}
+
+.appointments-list {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 0;
+    padding: 0;
+}
+
+.appointments-list .list-cell {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 10 0 10 0;
+    padding: 10 0 10 0;
+}
+
+.appointments-list .list-cell:empty {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.consultations-list {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 0;
+    padding: 0;
+}
+
+.consultations-list .list-cell {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-padding: 10 0 10 0;
+    padding: 10 0 10 0;
+}
+
+.consultations-list .list-cell:empty {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.status-label {
+    -fx-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14;
+    font-size: 14;
+    -fx-font-weight: 400;
+    font-weight: 400;
+    -fx-text-fill: #2b2b2b;
+    color: #2b2b2b;
+    -fx-padding: 16 0 28 0;
+    padding: 16 0 28 0;
+}

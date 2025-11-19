@@ -8,10 +8,10 @@ import com.ccinfoms17grp2.models.Branch;
 import com.ccinfoms17grp2.models.BranchWithDoctors;
 import com.ccinfoms17grp2.models.Doctor;
 import com.ccinfoms17grp2.models.DoctorAvailabilityStatus;
+import com.ccinfoms17grp2.utils.AvailabilityParser;
+import com.ccinfoms17grp2.utils.LocationUtil;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,51 +37,81 @@ public class EnhancedBranchSearchService {
                                                    int specializationId, 
                                                    LocalDateTime preferredSchedule,
                                                    int maxBranches) {
+        System.out.println("[EnhancedBranchSearch] Starting search: specializationId=" + specializationId + 
+            ", schedule=" + preferredSchedule + ", maxBranches=" + maxBranches);
+        
         List<Branch> allBranches = branchDAO.findAll();
-        List<BranchWithDoctors> results = new ArrayList<>();
+        System.out.println("[EnhancedBranchSearch] Found " + allBranches.size() + " branches total");
+        
+        List<BranchWithDoctors> candidateBranches = new ArrayList<>();
 
         for (Branch branch : allBranches) {
-            if (branch.getLatitude() == null || branch.getLongitude() == null) {
-                continue;
-            }
-
-            double distance;
             try {
-                RoutingService.RouteResult route = routingService.calculateRoute(
+                System.out.println("[EnhancedBranchSearch] Processing branch: " + branch.getBranchName() + 
+                    " (id=" + branch.getBranchId() + ")");
+                
+                if (branch.getLatitude() == null || branch.getLongitude() == null) {
+                    System.out.println("[EnhancedBranchSearch] Skipping branch (no coordinates)");
+                    continue;
+                }
+
+                double distance = LocationUtil.calculateDistance(
                     patientLat, patientLon, 
                     branch.getLatitude(), branch.getLongitude()
                 );
-                distance = route != null ? route.getDistanceKm() : calculateStraightLineDistance(
-                    patientLat, patientLon, branch.getLatitude(), branch.getLongitude()
-                );
+                System.out.println("[EnhancedBranchSearch] Distance: " + distance + " km");
+
+                System.out.println("[EnhancedBranchSearch] Querying doctors for branch " + branch.getBranchId() + 
+                    ", specializationId=" + specializationId);
+                
+                List<Doctor> doctors = specializationId > 0 
+                    ? doctorDAO.findByBranchAndSpecializations(branch.getBranchId(), 
+                        java.util.Collections.singletonList(specializationId))
+                    : doctorDAO.findByBranchId(branch.getBranchId());
+
+                System.out.println("[EnhancedBranchSearch] Branch " + branch.getBranchName() + 
+                    " (id=" + branch.getBranchId() + ") has " + doctors.size() + " doctors");
+
+                if (doctors.isEmpty()) {
+                    continue;
+                }
+
+                BranchWithDoctors branchWithDoctors = new BranchWithDoctors(branch, distance);
+
+                for (Doctor doctor : doctors) {
+                    BranchWithDoctors.AvailabilityColor color = determineAvailabilityColor(
+                        doctor, specializationId, preferredSchedule
+                    );
+                    branchWithDoctors.addDoctor(new BranchWithDoctors.DoctorAvailabilityInfo(doctor, color));
+                }
+
+                if (!branchWithDoctors.getDoctors().isEmpty()) {
+                    candidateBranches.add(branchWithDoctors);
+                }
             } catch (Exception e) {
-                distance = calculateStraightLineDistance(
-                    patientLat, patientLon, branch.getLatitude(), branch.getLongitude()
-                );
-            }
-
-            BranchWithDoctors branchWithDoctors = new BranchWithDoctors(branch, distance);
-            
-            List<Doctor> doctors = specializationId > 0 
-                ? doctorDAO.findByBranchAndSpecializations(branch.getBranchId(), 
-                    java.util.Collections.singletonList(specializationId))
-                : doctorDAO.findByBranchId(branch.getBranchId());
-
-            for (Doctor doctor : doctors) {
-                BranchWithDoctors.AvailabilityColor color = determineAvailabilityColor(
-                    doctor, specializationId, preferredSchedule
-                );
-                branchWithDoctors.addDoctor(new BranchWithDoctors.DoctorAvailabilityInfo(doctor, color));
-            }
-
-            if (!branchWithDoctors.getDoctors().isEmpty()) {
-                results.add(branchWithDoctors);
+                System.err.println("[EnhancedBranchSearch] ERROR processing branch " + 
+                    branch.getBranchName() + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
 
-        results.sort(Comparator.comparingDouble(BranchWithDoctors::getDistanceKm));
+        System.out.println("[EnhancedBranchSearch] Found " + candidateBranches.size() + " candidate branches with doctors");
 
-        return results.stream().limit(maxBranches).collect(Collectors.toList());
+        candidateBranches.sort(Comparator
+            .comparingDouble(BranchWithDoctors::getDistanceKm)
+            .thenComparing((b1, b2) -> {
+                long green1 = b1.getDoctors().stream()
+                    .filter(d -> d.getColor() == BranchWithDoctors.AvailabilityColor.GREEN)
+                    .count();
+                long green2 = b2.getDoctors().stream()
+                    .filter(d -> d.getColor() == BranchWithDoctors.AvailabilityColor.GREEN)
+                    .count();
+                return Long.compare(green2, green1);
+            }));
+
+        List<BranchWithDoctors> results = candidateBranches.stream().limit(maxBranches).collect(Collectors.toList());
+        System.out.println("[EnhancedBranchSearch] Returning " + results.size() + " branches");
+        return results;
     }
 
     private BranchWithDoctors.AvailabilityColor determineAvailabilityColor(
@@ -118,28 +148,30 @@ public class EnhancedBranchSearchService {
     }
 
     private boolean checkIfDoctorHasAppointment(int doctorId, LocalDateTime dateTime) {
-        LocalDateTime startWindow = dateTime.minusMinutes(30);
-        LocalDateTime endWindow = dateTime.plusMinutes(30);
-        
-        List<Appointment> appointments = appointmentDAO.findByDoctorAndDateRange(
-            doctorId, startWindow, endWindow
-        );
-        
-        return !appointments.isEmpty();
+        try {
+            LocalDateTime startWindow = dateTime.minusMinutes(30);
+            LocalDateTime endWindow = dateTime.plusMinutes(30);
+            
+            List<Appointment> appointments = appointmentDAO.findByDoctorAndDateRange(
+                doctorId, startWindow, endWindow
+            );
+            
+            return !appointments.isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean checkIfDoctorAvailableAtTime(Doctor doctor, LocalDateTime dateTime) {
-        return true;
-    }
+        if (dateTime == null) {
+            return true;
+        }
 
-    private double calculateStraightLineDistance(double lat1, double lon1, double lat2, double lon2) {
-        double earthRadius = 6371;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                   Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return earthRadius * c;
+        String availabilityJson = doctor.getAvailabilityDatetimeRanges();
+        if (availabilityJson == null || availabilityJson.trim().isEmpty()) {
+            return true;
+        }
+
+        return AvailabilityParser.isAvailableAt(availabilityJson, dateTime);
     }
 }

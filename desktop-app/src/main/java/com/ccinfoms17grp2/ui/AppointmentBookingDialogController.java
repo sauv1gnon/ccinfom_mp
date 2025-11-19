@@ -5,22 +5,21 @@ import com.ccinfoms17grp2.models.AppointmentStatus;
 import com.ccinfoms17grp2.models.BranchWithDoctors;
 import com.ccinfoms17grp2.models.BranchWithDoctors.DoctorAvailabilityInfo;
 import com.ccinfoms17grp2.models.Specialization;
-import com.ccinfoms17grp2.services.GeocodingService;
 import com.ccinfoms17grp2.services.ServiceRegistry;
+import com.gluonhq.maps.MapPoint;
+import com.gluonhq.maps.MapView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -57,9 +56,7 @@ public class AppointmentBookingDialogController {
     private VBox branchListContainer;
 
     @FXML
-    private WebView mapView;
-
-    private WebEngine webEngine;
+    private MapView mapView;
 
     @FXML
     private void initialize() {
@@ -91,10 +88,8 @@ public class AppointmentBookingDialogController {
     }
 
     private void setupMap() {
-        webEngine = mapView.getEngine();
-        String mapHtml = generateMapHtml();
-        System.out.println("[AppointmentBooking] Loading map HTML into WebEngine");
-        webEngine.loadContent(mapHtml);
+        mapView.setCenter(new MapPoint(14.5995, 120.9842));
+        mapView.setZoom(11);
     }
 
     private void loadSpecializations() {
@@ -213,7 +208,7 @@ public class AppointmentBookingDialogController {
         CompletableFuture.supplyAsync(() -> {
             return services.getEnhancedBranchSearchService().searchBranches(
                 patientLat, patientLon, selectedSpec.getSpecializationId(), 
-                preferredSchedule, 7
+                preferredSchedule, 5
             );
         }).thenAccept(branches -> Platform.runLater(() -> {
             if (branches.isEmpty()) {
@@ -259,7 +254,7 @@ public class AppointmentBookingDialogController {
 
         for (DoctorAvailabilityInfo doctorInfo : branchData.getDoctors()) {
             HBox doctorRow = new HBox(8.0);
-            doctorRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            doctorRow.setAlignment(Pos.CENTER_LEFT);
 
             Label colorIndicator = new Label("●");
             colorIndicator.setStyle("-fx-font-size: 16px; -fx-text-fill: " + getColorHex(doctorInfo.getColor()) + ";");
@@ -336,58 +331,16 @@ public class AppointmentBookingDialogController {
         statusLabel.setText(message);
     }
 
-    private String generateMapHtml() {
-        return "<!DOCTYPE html>" +
-                "<html><head>" +
-                "<meta charset='utf-8'>" +
-                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
-                "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
-                "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
-                "<style>* {margin:0;padding:0;box-sizing:border-box;} html,body,#map{height:100%;width:100%;}</style>" +
-                "</head><body>" +
-                "<div id='map'></div>" +
-                "<script>" +
-                "var map = L.map('map', {zoomControl: true, attributionControl: true}).setView([14.5995, 120.9842], 11);" +
-                "L.tileLayer('http://localhost:8082/styles/basic/{z}/{x}/{y}.png', {" +
-                "  minZoom: 3, maxZoom: 16, tms: false, crossOrigin: true" +
-                "}).addTo(map);" +
-                "map.invalidateSize();" +
-                "</script>" +
-                "</body></html>";
-    }
-
     private void updateMapWithPatientLocation() {
-        String script = String.format(
-            "if (window.patientMarker) { map.removeLayer(window.patientMarker); }" +
-            "window.patientMarker = L.marker([%f, %f], {" +
-            "  icon: L.icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', iconSize: [25, 41], iconAnchor: [12, 41]})" +
-            "}).addTo(map).bindPopup('Your Location');" +
-            "map.setView([%f, %f], 13);" +
-            "map.invalidateSize();",
-            patientLat, patientLon, patientLat, patientLon
-        );
-        webEngine.executeScript(script);
+        mapView.setCenter(new MapPoint(patientLat, patientLon));
+        mapView.setZoom(13);
     }
 
     private void updateMapWithBranches(List<BranchWithDoctors> branches) {
-        StringBuilder script = new StringBuilder();
-        script.append("if (window.branchMarkers) { window.branchMarkers.forEach(m => map.removeLayer(m)); }");
-        script.append("window.branchMarkers = [];");
-
-        for (BranchWithDoctors branch : branches) {
-            script.append(String.format(
-                "var marker = L.marker([%f, %f], {" +
-                "  icon: L.icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41], iconAnchor: [12, 41]})" +
-                "}).addTo(map).bindPopup('%s<br>%.1f km');" +
-                "window.branchMarkers.push(marker);",
-                branch.getBranch().getLatitude(),
-                branch.getBranch().getLongitude(),
-                branch.getBranch().getBranchName().replace("'", "\\'"),
-                branch.getDistanceKm()
-            ));
+        if (branches != null && !branches.isEmpty()) {
+            BranchMapLayer branchLayer = new BranchMapLayer(branches, patientLat, patientLon);
+            mapView.addLayer(branchLayer);
         }
-
-        script.append("map.invalidateSize();");
-        webEngine.executeScript(script.toString());
     }
 }
+

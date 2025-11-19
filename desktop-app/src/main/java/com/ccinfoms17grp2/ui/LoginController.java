@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 
 public class LoginController implements ViewController {
     private SceneNavigator navigator;
@@ -20,7 +21,53 @@ public class LoginController implements ViewController {
     private PasswordField passwordField;
 
     @FXML
+    private TextField passwordVisibleField;
+
+    @FXML
+    private ToggleButton passwordVisibilityToggle;
+
+    @FXML
     private Label statusLabel;
+
+    @FXML
+    public void initialize() {
+        // Initialize password visibility toggle
+        if (passwordVisibilityToggle != null) {
+            // Add listener to toggle button
+            passwordVisibilityToggle.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal) {
+                    // Show password
+                    passwordVisibleField.setText(passwordField.getText());
+                    passwordField.setVisible(false);
+                    passwordField.setManaged(false);
+                    passwordVisibleField.setVisible(true);
+                    passwordVisibleField.setManaged(true);
+                    passwordVisibilityToggle.setGraphic(createLabel("🔒"));
+                } else {
+                    // Hide password
+                    passwordField.setText(passwordVisibleField.getText());
+                    passwordVisibleField.setVisible(false);
+                    passwordVisibleField.setManaged(false);
+                    passwordField.setVisible(true);
+                    passwordField.setManaged(true);
+                    passwordVisibilityToggle.setGraphic(createLabel("👁"));
+                }
+            });
+        }
+    }
+
+    private Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font-size: 16px;");
+        return label;
+    }
+
+    private String getPasswordValue() {
+        if (passwordVisibilityToggle != null && passwordVisibilityToggle.isSelected()) {
+            return passwordVisibleField.getText();
+        }
+        return passwordField.getText();
+    }
 
     @FXML
     private void handlePatientLogin() {
@@ -66,6 +113,18 @@ public class LoginController implements ViewController {
     public void onDisplay() {
         usernameField.clear();
         passwordField.clear();
+        if (passwordVisibleField != null) {
+            passwordVisibleField.clear();
+        }
+        if (passwordVisibilityToggle != null) {
+            passwordVisibilityToggle.setSelected(false);
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            if (passwordVisibleField != null) {
+                passwordVisibleField.setVisible(false);
+                passwordVisibleField.setManaged(false);
+            }
+        }
         statusLabel.setText("Sign in to continue");
         if (session != null) {
             session.clear();
@@ -78,7 +137,7 @@ public class LoginController implements ViewController {
             return;
         }
         String email = usernameField.getText() == null ? "" : usernameField.getText().trim();
-        String password = passwordField.getText() == null ? "" : passwordField.getText();
+        String password = getPasswordValue() == null ? "" : getPasswordValue();
         if (email.isEmpty() || password.isEmpty()) {
             statusLabel.setText("Email and password are required");
             return;

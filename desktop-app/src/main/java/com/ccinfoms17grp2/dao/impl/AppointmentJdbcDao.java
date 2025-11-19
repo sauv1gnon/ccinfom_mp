@@ -66,7 +66,7 @@ public class AppointmentJdbcDao extends AbstractJdbcDao implements AppointmentDA
             ps.setInt(2, appointment.getDoctorId());
             ps.setInt(3, appointment.getBranchId());
             ps.setTimestamp(4, Timestamp.valueOf(appointment.getAppointmentDateTime()));
-            ps.setString(5, appointment.getStatus().name().toLowerCase());
+            ps.setString(5, appointment.getStatus().toDatabaseValue());
             ps.executeUpdate();
             
             try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -90,7 +90,7 @@ public class AppointmentJdbcDao extends AbstractJdbcDao implements AppointmentDA
             ps.setInt(2, appointment.getDoctorId());
             ps.setInt(3, appointment.getBranchId());
             ps.setTimestamp(4, Timestamp.valueOf(appointment.getAppointmentDateTime()));
-            ps.setString(5, appointment.getStatus().name().toLowerCase());
+            ps.setString(5, appointment.getStatus().toDatabaseValue());
             ps.setInt(6, appointment.getAppointmentId());
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -169,7 +169,7 @@ public class AppointmentJdbcDao extends AbstractJdbcDao implements AppointmentDA
         final String sql = BASE_SELECT + "WHERE status = ? ORDER BY appointment_datetime DESC";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, status.name().toLowerCase());
+            ps.setString(1, status.toDatabaseValue());
             try (ResultSet rs = ps.executeQuery()) {
                 List<Appointment> appointments = new ArrayList<>();
                 while (rs.next()) {
@@ -208,7 +208,7 @@ public class AppointmentJdbcDao extends AbstractJdbcDao implements AppointmentDA
         final String sql = "UPDATE appointment_records SET status = ? WHERE appointment_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, status.name().toLowerCase());
+            ps.setString(1, status.toDatabaseValue());
             ps.setInt(2, appointmentId);
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -242,7 +242,7 @@ public class AppointmentJdbcDao extends AbstractJdbcDao implements AppointmentDA
         int branchId = rs.getInt("branch_id");
         LocalDateTime appointmentDateTime = DateTimeUtil.fromTimestamp(rs.getTimestamp("appointment_datetime"));
         String statusStr = rs.getString("status");
-        AppointmentStatus status = AppointmentStatus.valueOf(statusStr.toUpperCase());
+        AppointmentStatus status = AppointmentStatus.fromDatabaseValue(statusStr);
         LocalDateTime createdAt = DateTimeUtil.fromTimestamp(rs.getTimestamp("created_at"));
         
         return new Appointment(appointmentId, patientId, doctorId, branchId, appointmentDateTime, status, createdAt);

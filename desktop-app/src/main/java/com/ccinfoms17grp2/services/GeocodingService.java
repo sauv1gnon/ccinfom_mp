@@ -106,6 +106,54 @@ public class GeocodingService {
         }
     }
 
+    public java.util.List<GeocodingResult> searchAddresses(String query, int limit) throws Exception {
+        if (query == null || query.trim().isEmpty()) {
+            throw new IllegalArgumentException("Query cannot be empty");
+        }
+
+        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
+        String urlString = NOMINATIM_BASE_URL + "/search?q=" + encodedQuery + "&format=json&limit=" + limit;
+
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(TIMEOUT_MS);
+        conn.setReadTimeout(TIMEOUT_MS);
+        conn.setRequestProperty("User-Agent", "CCInfoMSHealthcareApp/1.0");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Connection", "close");
+
+        try {
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                throw new Exception("Search service returned status code: " + responseCode);
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JsonArray results = JsonParser.parseString(response.toString()).getAsJsonArray();
+            java.util.List<GeocodingResult> list = new java.util.ArrayList<>();
+            
+            for (JsonElement element : results) {
+                JsonObject obj = element.getAsJsonObject();
+                double lat = obj.get("lat").getAsDouble();
+                double lon = obj.get("lon").getAsDouble();
+                String displayName = obj.get("display_name").getAsString();
+                list.add(new GeocodingResult(lat, lon, displayName));
+            }
+            
+            return list;
+        } finally {
+            conn.disconnect();
+        }
+    }
+
     /**
      * Check if the Nominatim service is reachable.
      *
@@ -114,13 +162,13 @@ public class GeocodingService {
     public boolean isServiceAvailable() {
         HttpURLConnection conn = null;
         try {
-            URL url = new URL(NOMINATIM_BASE_URL + "/status.php");
+            URL url = new URL(NOMINATIM_BASE_URL + "/search?q=test&limit=1");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(3000);
             conn.setReadTimeout(3000);
             conn.setRequestProperty("User-Agent", "CCInfoMSHealthcareApp/1.0");
-            conn.setRequestProperty("Accept", "*/*");
+            conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Connection", "close");
             
             int responseCode = conn.getResponseCode();

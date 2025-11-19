@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS appointment_records (
     appointment_datetime DATETIME NOT NULL,
     status ENUM('scheduled', 'completed', 'canceled', 'no_show') DEFAULT 'scheduled',
     notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES patient_records(patient_id),
     FOREIGN KEY (doctor_id) REFERENCES doctor_records(doctor_id),
     FOREIGN KEY (branch_id) REFERENCES branch_records(branch_id)

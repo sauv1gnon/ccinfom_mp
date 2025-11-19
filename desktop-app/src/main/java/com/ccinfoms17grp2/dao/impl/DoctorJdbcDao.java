@@ -21,8 +21,8 @@ import java.util.Optional;
 
 public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
 
-    private static final String BASE_SELECT = "SELECT doctor_id, last_name, first_name, email, specializations_list, availability_status, created_at FROM doctor_records ";
-    private static final String ORDER_BY = " ORDER BY last_name ASC, first_name ASC";
+    private static final String BASE_SELECT = "SELECT doctor_records.doctor_id, doctor_records.last_name, doctor_records.first_name, doctor_records.email, doctor_records.specializations_list, doctor_records.availability_status, doctor_records.availability_datetime_ranges, doctor_records.created_at FROM doctor_records ";
+    private static final String ORDER_BY = " ORDER BY doctor_records.last_name ASC, doctor_records.first_name ASC";
 
     @Override
     public List<Doctor> findAll() throws DaoException {
@@ -265,8 +265,11 @@ public class DoctorJdbcDao extends AbstractJdbcDao implements DoctorDAO {
         List<Integer> specializationIds = parseSpecializations(specializationsJson);
         String statusValue = rs.getString("availability_status");
         DoctorAvailabilityStatus status = DoctorAvailabilityStatus.fromDatabaseValue(statusValue);
+        String availabilityRanges = rs.getString("availability_datetime_ranges");
         LocalDateTime createdAt = DateTimeUtil.fromTimestamp(rs.getTimestamp("created_at"));
-        return new Doctor(doctorId, lastName, firstName, email, specializationIds, status, createdAt);
+        Doctor doctor = new Doctor(doctorId, lastName, firstName, email, specializationIds, status, createdAt);
+        doctor.setAvailabilityDatetimeRanges(availabilityRanges);
+        return doctor;
     }
 
     private Branch mapBranch(ResultSet rs) throws SQLException {

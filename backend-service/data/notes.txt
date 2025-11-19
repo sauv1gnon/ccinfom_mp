@@ -1,4 +1,4 @@
-actual map service is hella big >10gb
+actual map and geoservice is really big +120gb
 use command in WSL bash or gitbash
 ```
 wget https://download.geofabrik.de/asia/philippines-latest.osm.pbf

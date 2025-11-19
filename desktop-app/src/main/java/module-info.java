@@ -6,6 +6,7 @@ module com.ccinfoms.desktopapp {
 	requires java.logging;
 	requires java.naming;
 	requires com.google.gson;
+	requires com.gluonhq.maps;
 
 	exports com.ccinfoms17grp2;
 	exports com.ccinfoms17grp2.models;

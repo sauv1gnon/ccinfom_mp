@@ -10,15 +10,16 @@ public enum AppointmentStatus {
         if (value == null) {
             return SCHEDULED;
         }
-        switch (value.trim().toUpperCase()) {
-            case "SCHEDULED":
+        switch (value.trim().toLowerCase()) {
+            case "scheduled":
                 return SCHEDULED;
-            case "IN PROGRESS":
-            case "IN_PROGRESS":
+            case "in progress":
+            case "in_progress":
                 return IN_PROGRESS;
-            case "COMPLETED":
+            case "completed":
                 return COMPLETED;
-            case "CANCELLED":
+            case "canceled":
+            case "cancelled":
                 return CANCELLED;
             default:
                 throw new IllegalArgumentException("Unknown appointment status: " + value);
@@ -28,13 +29,13 @@ public enum AppointmentStatus {
     public String toDatabaseValue() {
         switch (this) {
             case SCHEDULED:
-                return "Scheduled";
+                return "scheduled";
             case IN_PROGRESS:
-                return "In Progress";
+                return "in_progress";
             case COMPLETED:
-                return "Completed";
+                return "completed";
             case CANCELLED:
-                return "Cancelled";
+                return "canceled";
             default:
                 throw new IllegalStateException("Unexpected value: " + this);
         }

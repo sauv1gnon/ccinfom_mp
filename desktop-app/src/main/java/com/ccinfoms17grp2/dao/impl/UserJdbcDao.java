@@ -233,7 +233,7 @@ public class UserJdbcDao extends AbstractJdbcDao implements UserDAO {
         int userId = rs.getInt("user_id");
         String email = rs.getString("email");
         String passwordHash = rs.getString("password_hash");
-        User.UserType userType = User.UserType.valueOf(rs.getString("user_type"));
+        User.UserType userType = User.UserType.fromDatabaseValue(rs.getString("user_type"));
         int personId = rs.getInt("person_id");
         boolean isActive = rs.getBoolean("is_active");
         LocalDateTime lastLoginAt = rs.getTimestamp("last_login_at") != null ? 

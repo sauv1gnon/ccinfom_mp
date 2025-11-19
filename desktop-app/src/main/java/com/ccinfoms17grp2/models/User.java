@@ -19,7 +19,27 @@ public class User {
     private LocalDateTime updatedAt;
 
     public enum UserType {
-        PATIENT, DOCTOR, ADMIN
+        PATIENT, DOCTOR, ADMIN;
+
+        public static UserType fromDatabaseValue(String value) {
+            if (value == null) {
+                return PATIENT;
+            }
+            switch (value.trim().toUpperCase()) {
+                case "PATIENT":
+                    return PATIENT;
+                case "DOCTOR":
+                    return DOCTOR;
+                case "ADMIN":
+                    return ADMIN;
+                default:
+                    throw new IllegalArgumentException("Unknown user type: " + value);
+            }
+        }
+
+        public String toDatabaseValue() {
+            return this.name();
+        }
     }
 
     public User() {

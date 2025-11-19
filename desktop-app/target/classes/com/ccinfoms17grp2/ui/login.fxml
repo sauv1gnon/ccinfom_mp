@@ -5,47 +5,67 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.ccinfoms17grp2.ui.LoginController" prefWidth="920.0" prefHeight="600.0">
-    <top>
-        <VBox alignment="CENTER" spacing="6.0">
-            <padding>
-                <Insets top="36.0" right="24.0" bottom="12.0" left="24.0" />
-            </padding>
-            <Label text="CityCare Information System" styleClass="app-title">
-                <font>
-                    <Font name="Segoe UI Semibold" size="32.0" />
-                </font>
-            </Label>
-            <Label fx:id="statusLabel" text="Sign in to continue" styleClass="subtitle" />
-        </VBox>
-    </top>
+            fx:controller="com.ccinfoms17grp2.ui.LoginController" prefWidth="1100.0" prefHeight="1019.0"
+            styleClass="login-root">
     <center>
-        <VBox alignment="CENTER" spacing="16.0">
-            <padding>
-                <Insets top="0.0" right="60.0" bottom="0.0" left="60.0" />
-            </padding>
-            <TextField fx:id="usernameField" promptText="Username" maxWidth="360.0" />
-            <PasswordField fx:id="passwordField" promptText="Password" maxWidth="360.0" />
-            <VBox spacing="10.0" maxWidth="360.0">
-                <Button text="Login as Patient" onAction="#handlePatientLogin" prefHeight="42.0" />
-                <Button text="Login as Doctor" onAction="#handleDoctorLogin" prefHeight="42.0" />
-                <Button text="Login as Admin" onAction="#handleAdminLogin" prefHeight="42.0" />
+        <StackPane alignment="CENTER">
+            <VBox alignment="TOP_CENTER" spacing="25.0" styleClass="login-widget">
+                <padding>
+                    <Insets top="40.0" right="3.0" bottom="40.0" left="3.0" />
+                </padding>
+                
+                <!-- Title -->
+                <Label text="Digital Queue and Appointment System" styleClass="login-title" />
+                
+                <!-- Email Input -->
+                <VBox styleClass="form-field">
+                    <Label text="Email" styleClass="field-label" />
+                    <HBox spacing="0" styleClass="input-container">
+                        <TextField fx:id="usernameField" promptText="Input" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                        <Button styleClass="icon-button" prefWidth="48.0" prefHeight="48.0">
+                            <graphic>
+                                <Label text="✉" styleClass="field-icon" />
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </VBox>
+                
+                <!-- Password Input -->
+                <VBox styleClass="form-field">
+                    <Label text="Password" styleClass="field-label" />
+                    <HBox spacing="0" styleClass="input-container">
+                        <StackPane HBox.hgrow="ALWAYS">
+                            <PasswordField fx:id="passwordField" promptText="Input" styleClass="input-field" />
+                            <TextField fx:id="passwordVisibleField" promptText="Input" styleClass="input-field" visible="false" managed="false" />
+                        </StackPane>
+                        <ToggleButton fx:id="passwordVisibilityToggle" styleClass="icon-button" prefWidth="48.0" prefHeight="48.0">
+                            <graphic>
+                                <Label text="👁" styleClass="field-icon" />
+                            </graphic>
+                        </ToggleButton>
+                    </HBox>
+                </VBox>
+                
+                <!-- Login Buttons -->
+                <Button text="Login as Patient" styleClass="btn-dark" onAction="#handlePatientLogin" prefHeight="45.0" maxWidth="600.0" />
+                <Button text="Login as Doctor" styleClass="btn-dark" onAction="#handleDoctorLogin" prefHeight="45.0" maxWidth="600.0" />
+                <Button text="Login as Administrator" styleClass="btn-dark" onAction="#handleAdminLogin" prefHeight="45.0" maxWidth="600.0" />
+                
+                <!-- Register Button -->
+                <Button text="Register as Patient" styleClass="btn-secondary" onAction="#handleOpenRegistration" prefHeight="45.0" maxWidth="600.0" />
+                
+                <!-- Status Message -->
+                <Label fx:id="statusLabel" text="Sign in to continue" styleClass="status-label" />
+                
             </VBox>
-        </VBox>
+        </StackPane>
     </center>
-    <bottom>
-        <HBox alignment="CENTER" spacing="12.0">
-            <padding>
-                <Insets top="16.0" right="24.0" bottom="24.0" left="24.0" />
-            </padding>
-            <Label text="New patient?" />
-            <Button text="Register" onAction="#handleOpenRegistration" />
-        </HBox>
-    </bottom>
 </BorderPane>
